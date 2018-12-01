@@ -55,5 +55,11 @@ MonoBehaviour:
     type: 2}
   dicesOrigin: {fileID: 0}
   gameCanvas: {fileID: 0}
-  steps: 0
+  places: {fileID: 0}
+  villagers: {fileID: 0}
+  currentStep: 0
   gameTurn: 0
+  nextStep: 0
+  dicePoint: 0
+  blockPoint: 0
+  dicesCount: 3

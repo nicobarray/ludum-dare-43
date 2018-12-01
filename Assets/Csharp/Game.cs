@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour
 {
+    public static Game instance;
+
     public enum TurnSteps
     {
         Upkeep = 0,
@@ -19,6 +22,8 @@ public class Game : MonoBehaviour
     [Header("Scene References")]
     public Transform dicesOrigin;
     public GameCanvas gameCanvas;
+    public GameObject places;
+    public GameObject villagers;
 
     [Header("Game data (Read only)")]
     public TurnSteps currentStep = TurnSteps.Upkeep;
@@ -30,10 +35,28 @@ public class Game : MonoBehaviour
 
     Dices dices;
 
+    public void RemoveDicePoints(int points)
+    {
+        dicePoint -= points;
+        if (dicePoint < 0)
+        {
+            dicePoint = 0;
+        }
+
+        gameCanvas.dicePointText.text = "DP: " + dicePoint;
+    }
+
     void UpkeepStep()
     {
         gameCanvas.throwDices.gameObject.SetActive(false);
         gameCanvas.add1Dice.gameObject.SetActive(false);
+        dices.gameObject.SetActive(false);
+
+        Villager[] vils = villagers.GetComponentsInChildren<Villager>();
+        Array.ForEach(vils, vil =>
+        {
+            vil.ResetPosition();
+        });
 
         dicePoint = 0;
         gameCanvas.phaseText.text = "Upkeep";
@@ -45,16 +68,9 @@ public class Game : MonoBehaviour
     {
         gameCanvas.throwDices.gameObject.SetActive(true);
         gameCanvas.nextStep.gameObject.SetActive(false);
+        dices.gameObject.SetActive(true);
 
         gameCanvas.phaseText.text = "Throw dices!";
-    }
-
-    void DiceStep_UpdateDiceCount()
-    {
-        for (int i = 0; i < dicesCount; i++)
-        {
-            dices.AddDice();
-        }
     }
 
     void DicesStep_ThrowDices()
@@ -71,10 +87,23 @@ public class Game : MonoBehaviour
     {
         gameCanvas.nextStep.gameObject.SetActive(true);
         gameCanvas.phaseText.text = "Act!";
+
+        Villager[] vils = villagers.GetComponentsInChildren<Villager>();
+        Array.ForEach(vils, vil =>
+        {
+            vil.canAct = true;
+        });
     }
 
     void EndStep()
     {
+        Villager[] vils = villagers.GetComponentsInChildren<Villager>();
+        Array.ForEach(vils, vil =>
+        {
+            vil.canAct = false;
+        });
+
+        dices.gameObject.SetActive(false);
         gameCanvas.phaseText.text = "Selected among 3";
     }
 
@@ -108,6 +137,17 @@ public class Game : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
+
     void OnEnable()
     {
         Debug.Assert(dicesOrigin != null, "Place the dices origin somewhere on the scene !");
@@ -119,14 +159,23 @@ public class Game : MonoBehaviour
         gameCanvas.throwDices.onClick.AddListener(new UnityEngine.Events.UnityAction(DicesStep_ThrowDices));
         gameCanvas.add1Dice.onClick.AddListener(new UnityEngine.Events.UnityAction(dices.AddDice));
         gameCanvas.nextStep.onClick.AddListener(new UnityEngine.Events.UnityAction(NextStep));
+    }
 
-        DiceStep_UpdateDiceCount();
+    void Start()
+    {
+        for (int i = 0; i < dicesCount; i++)
+        {
+            dices.AddDice();
+        }
+
         UpkeepStep();
     }
 
     void OnDisable()
     {
         gameCanvas.throwDices.onClick.RemoveAllListeners();
+        gameCanvas.add1Dice.onClick.RemoveAllListeners();
+        gameCanvas.nextStep.onClick.RemoveAllListeners();
 
         Destroy(dices.gameObject);
     }

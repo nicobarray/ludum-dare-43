@@ -29,7 +29,7 @@ public class Dices : MonoBehaviour
     {
         for (int i = 0; i < dices.Count; i++)
         {
-            dices[i].transform.position = new Vector3(transform.position.x - i * Mathf.Sqrt(2), 0, 0);
+            dices[i].transform.localPosition = new Vector3(transform.position.x - i * Mathf.Sqrt(2), 0, 0);
             dices[i].name = "Dice_" + i;
         }
     }
@@ -44,11 +44,6 @@ public class Dices : MonoBehaviour
     public void Shuffle()
     {
         dices.ForEach(dice => dice.Shuffle());
-    }
-
-    void Start()
-    {
-        ReorderDices();
     }
 
     void Update()
