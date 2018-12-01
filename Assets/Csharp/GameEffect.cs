@@ -8,15 +8,15 @@ public class GameEffect : ScriptableObject
         Villager,
         Dice,
         Wood,
-        Food
+        Food,
+        Stone
     }
 
     public int value;
     public EffectType type;
-    public bool instant;
 
     public string GetText()
     {
-        return value > 0 ? "+" : "" + value + " " + type;
+        return (value > 0 ? "+" : "") + value + " " + type;
     }
 }

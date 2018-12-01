@@ -6,6 +6,7 @@ public class GameEvent : ScriptableObject
 {
     public string eventDescription;
     public Sprite image;
+    public int turns = 1;
 
     public GameEffect[] effects;
 

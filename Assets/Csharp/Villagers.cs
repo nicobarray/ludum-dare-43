@@ -29,7 +29,7 @@ public class Villagers : MonoBehaviour
     {
         for (int i = 0; i < villagers.Count; i++)
         {
-            villagers[i].transform.localPosition = new Vector3(transform.position.x + i * Mathf.Sqrt(2), 0, 0);
+            villagers[i].transform.localPosition = new Vector3(i * Mathf.Sqrt(2), 0, 0);
             villagers[i].name = "Villager_" + i;
         }
     }

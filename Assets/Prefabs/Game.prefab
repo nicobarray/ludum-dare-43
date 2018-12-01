@@ -71,7 +71,8 @@ MonoBehaviour:
   blockPoint: 0
   dicesCount: 1
   villagersCount: 1
+  placesCount: 3
   wood: 0
-  meals: 0
+  meals: 3
   stone: 0
   TURNS_BEFORE_WINTER: 3
