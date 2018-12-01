@@ -17,6 +17,8 @@ public class Dices : MonoBehaviour
             Quaternion.AngleAxis(UnityEngine.Random.value * 360, Vector3.forward)
         );
 
+        newDice.transform.SetParent(transform);
+
         Dice dice = newDice.GetComponent<Dice>();
         dices.Add(dice);
         dice.SetManager(this);
@@ -55,7 +57,6 @@ public class Dices : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Click ! (by " + name + ")");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
