@@ -10,8 +10,6 @@ public class Dice : MonoBehaviour
 
     public int value = 1;
 
-    Dices dices;
-
     void RefreshSpriteRenderer()
     {
         spriteRenderer.sprite = faces[value - 1];
@@ -23,19 +21,9 @@ public class Dice : MonoBehaviour
         RefreshSpriteRenderer();
     }
 
-    public void SetManager(Dices dices)
-    {
-        this.dices = dices;
-    }
-
     // Use this for initialization
     void Start()
     {
         RefreshSpriteRenderer();
-    }
-
-    void Update()
-    {
-        
     }
 }

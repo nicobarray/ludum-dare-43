@@ -6,7 +6,7 @@ public class Dices : MonoBehaviour
 {
     public GameObject dicePrefab;
 
-    public List<Dice> dices;
+    public List<Dice> dices = new List<Dice>();
 
     public void AddDice()
     {
@@ -20,7 +20,6 @@ public class Dices : MonoBehaviour
 
         Dice dice = newDice.GetComponent<Dice>();
         dices.Add(dice);
-        dice.SetManager(this);
 
         dices[dices.Count - 1].Shuffle();
         ReorderDices();

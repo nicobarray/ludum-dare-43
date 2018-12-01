@@ -24,21 +24,52 @@ public class Game : MonoBehaviour
     public TurnSteps currentStep = TurnSteps.Upkeep;
     public int gameTurn;
     public bool nextStep = false;
+    public int dicePoint = 0;
+    public int blockPoint = 0;
+    public int dicesCount = 3;
 
     Dices dices;
 
     void UpkeepStep()
     {
+        gameCanvas.throwDices.gameObject.SetActive(false);
+        gameCanvas.add1Dice.gameObject.SetActive(false);
+
+        dicePoint = 0;
         gameCanvas.phaseText.text = "Upkeep";
+        gameCanvas.dicePointText.text = "DP: " + dicePoint;
+        gameCanvas.blockPointText.text = "BP: " + blockPoint;
     }
 
     void DicesStep()
     {
+        gameCanvas.throwDices.gameObject.SetActive(true);
+        gameCanvas.nextStep.gameObject.SetActive(false);
+
         gameCanvas.phaseText.text = "Throw dices!";
+    }
+
+    void DiceStep_UpdateDiceCount()
+    {
+        for (int i = 0; i < dicesCount; i++)
+        {
+            dices.AddDice();
+        }
+    }
+
+    void DicesStep_ThrowDices()
+    {
+        dices.Shuffle();
+        dices.dices.ForEach(dice => dicePoint += dice.value);
+        gameCanvas.dicePointText.text = "DP: " + dicePoint;
+        NextStep();
+
+        gameCanvas.throwDices.gameObject.SetActive(false);
     }
 
     void MainStep()
     {
+        gameCanvas.nextStep.gameObject.SetActive(true);
         gameCanvas.phaseText.text = "Act!";
     }
 
@@ -85,9 +116,12 @@ public class Game : MonoBehaviour
         dices = Instantiate(dicesPrefab, dicesOrigin.position, Quaternion.identity).GetComponent<Dices>();
 
         // ? Link object between them here.
-        gameCanvas.throwDices.onClick.AddListener(new UnityEngine.Events.UnityAction(dices.Shuffle));
+        gameCanvas.throwDices.onClick.AddListener(new UnityEngine.Events.UnityAction(DicesStep_ThrowDices));
         gameCanvas.add1Dice.onClick.AddListener(new UnityEngine.Events.UnityAction(dices.AddDice));
         gameCanvas.nextStep.onClick.AddListener(new UnityEngine.Events.UnityAction(NextStep));
+
+        DiceStep_UpdateDiceCount();
+        UpkeepStep();
     }
 
     void OnDisable()
