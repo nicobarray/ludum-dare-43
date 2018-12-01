@@ -10,4 +10,12 @@ public class GameCanvas : MonoBehaviour
     public TMPro.TextMeshProUGUI phaseText;
     public TMPro.TextMeshProUGUI dicePointText;
     public TMPro.TextMeshProUGUI blockPointText;
+
+    public GameObject eventFrame;
+    public Button eventOption1;
+    public Button eventOption2;
+    public Image eventOption1Image;
+    public Image eventOption2Image;
+    public TMPro.TextMeshProUGUI eventOption1Text;
+    public TMPro.TextMeshProUGUI eventOption2Text;
 }
