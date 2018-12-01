@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Dice : MonoBehaviour
 {
-
     public Sprite[] faces;
 
     public SpriteRenderer spriteRenderer;
 
     public int value = 1;
+
+    Dices dices;
 
     void RefreshSpriteRenderer()
     {
@@ -22,9 +23,19 @@ public class Dice : MonoBehaviour
         RefreshSpriteRenderer();
     }
 
+    public void SetManager(Dices dices)
+    {
+        this.dices = dices;
+    }
+
     // Use this for initialization
     void Start()
     {
         RefreshSpriteRenderer();
+    }
+
+    void Update()
+    {
+        
     }
 }
