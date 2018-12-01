@@ -40,4 +40,17 @@ public class Places : MonoBehaviour
         places.Remove(place);
         ReorderPlaces();
     }
+
+    public void CollectWork()
+    {
+        places.ForEach(p =>
+        {
+            if (p.worker != null)
+            {
+                Game.instance.CollectResourceFrom(p);
+                p.worker.ResetPosition();
+                p.worker = null;
+            }
+        });
+    }
 }

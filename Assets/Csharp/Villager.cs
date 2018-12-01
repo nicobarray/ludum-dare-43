@@ -31,6 +31,7 @@ public class Villager : MonoBehaviour
     void Awake()
     {
         initialPosition = transform.position;
+
     }
 
     // Update is called once per frame
@@ -67,20 +68,20 @@ public class Villager : MonoBehaviour
                             p = place;
                             break;
                         }
-
                     }
 
-                    if (p == null)
+                    if (p == null || p.worker != null)
                     {
                         transform.position = positionBeforeDrag;
                     }
                     else
                     {
-                        int points = Place.BaseDicePoint(p.type);
+                        int points = Place.BaseDicePoint(p.scriptable.type);
                         if (Game.instance.dicePoint >= points)
                         {
                             Game.instance.RemoveDicePoints(points);
                             canAct = false;
+                            p.worker = this;
                         }
                         else
                         {

@@ -53,6 +53,11 @@ public class Game : MonoBehaviour
     GameEvent[] currentSelection = new GameEvent[2];
     List<GameEvent> repeatableEvents = new List<GameEvent>();
 
+    public void CollectResourceFrom(Place p)
+    {
+        ApplyEffect(p.scriptable.effect);
+    }
+
     public void RemoveDicePoints(int points)
     {
         dicePoint -= points;
@@ -231,70 +236,75 @@ public class Game : MonoBehaviour
     {
         Array.ForEach(ev.effects, eff =>
         {
-            switch (eff.type)
-            {
-                case GameEffect.EffectType.Wood:
-                    wood += eff.value;
-                    if (wood < 0)
-                    {
-                        wood = 0;
-                    }
-                    gameCanvas.woodText.text = "Wood: " + wood;
-                    break;
-                case GameEffect.EffectType.Stone:
-                    stone += eff.value;
-                    if (stone < 0)
-                    {
-                        stone = 0;
-                    }
-                    gameCanvas.stoneText.text = "Stone: " + stone;
-                    break;
-                case GameEffect.EffectType.Food:
-                    meals += eff.value;
-                    if (meals < 0)
-                    {
-                        meals = 0;
-                    }
-                    gameCanvas.mealsText.text = "Meals: " + meals;
-                    break;
-                case GameEffect.EffectType.Dice:
-                    dicesCount += eff.value;
-                    if (dicesCount < 0)
-                    {
-                        dicesCount = 0;
-                    }
-
-                    while (dices.dices.Count > dicesCount)
-                    {
-                        dices.RemoveDice(dices.dices[0]);
-                    }
-
-                    while (dices.dices.Count < dicesCount)
-                    {
-                        dices.AddDice();
-                    }
-
-                    break;
-                case GameEffect.EffectType.Villager:
-                    villagersCount += eff.value;
-                    if (villagersCount < 0)
-                    {
-                        villagersCount = 0;
-                    }
-
-                    while (villagers.villagers.Count > villagersCount)
-                    {
-                        villagers.RemoveVillager(villagers.villagers[0]);
-                    }
-
-                    while (villagers.villagers.Count < villagersCount)
-                    {
-                        villagers.AddVillager();
-                    }
-
-                    break;
-            }
+            ApplyEffect(eff);
         });
+    }
+
+    void ApplyEffect(GameEffect eff)
+    {
+        switch (eff.type)
+        {
+            case GameEffect.EffectType.Wood:
+                wood += eff.value;
+                if (wood < 0)
+                {
+                    wood = 0;
+                }
+                gameCanvas.woodText.text = "Wood: " + wood;
+                break;
+            case GameEffect.EffectType.Stone:
+                stone += eff.value;
+                if (stone < 0)
+                {
+                    stone = 0;
+                }
+                gameCanvas.stoneText.text = "Stone: " + stone;
+                break;
+            case GameEffect.EffectType.Food:
+                meals += eff.value;
+                if (meals < 0)
+                {
+                    meals = 0;
+                }
+                gameCanvas.mealsText.text = "Meals: " + meals;
+                break;
+            case GameEffect.EffectType.Dice:
+                dicesCount += eff.value;
+                if (dicesCount < 0)
+                {
+                    dicesCount = 0;
+                }
+
+                while (dices.dices.Count > dicesCount)
+                {
+                    dices.RemoveDice(dices.dices[0]);
+                }
+
+                while (dices.dices.Count < dicesCount)
+                {
+                    dices.AddDice();
+                }
+
+                break;
+            case GameEffect.EffectType.Villager:
+                villagersCount += eff.value;
+                if (villagersCount < 0)
+                {
+                    villagersCount = 0;
+                }
+
+                while (villagers.villagers.Count > villagersCount)
+                {
+                    villagers.RemoveVillager(villagers.villagers[0]);
+                }
+
+                while (villagers.villagers.Count < villagersCount)
+                {
+                    villagers.AddVillager();
+                }
+
+                break;
+        }
     }
 
     void Awake()

@@ -16,7 +16,7 @@ public class Tooltip : MonoBehaviour
         }
     }
 
-    string GetTooltipText(Place.Type placeType)
+    string GetTooltipText(ScriptablePlace.Type placeType)
     {
         return Place.PlaceToString(placeType) + " (" + Place.BaseDicePoint(placeType) + "dp)";
     }
@@ -40,7 +40,7 @@ public class Tooltip : MonoBehaviour
 
             if (p != null)
             {
-                tooltipName.text = GetTooltipText(p.type);
+                tooltipName.text = GetTooltipText(p.scriptable.type);
             }
         });
     }
