@@ -10,16 +10,48 @@ public class Dice : MonoBehaviour
 
     public int value = 1;
 
-    void RefreshSpriteRenderer()
-    {
-        spriteRenderer.sprite = faces[value - 1];
-    }
+    Coroutine unstableCoroutine = null;
 
     public void Shuffle()
     {
         value = UnityEngine.Random.Range(1, 7);
         RefreshSpriteRenderer();
     }
+
+    public void Unstable()
+    {
+        if (unstableCoroutine != null)
+        {
+            StopCoroutine(unstableCoroutine);
+        }
+
+        unstableCoroutine = StartCoroutine(UnstableEnumerator());
+    }
+
+    public void Stable()
+    {
+        if (unstableCoroutine != null)
+        {
+            StopCoroutine(unstableCoroutine);
+        }
+
+        Shuffle();
+    }
+
+    IEnumerator UnstableEnumerator()
+    {
+        while (true)
+        {
+            Shuffle();
+            yield return new WaitForSeconds(.25f);
+        }
+    }
+
+    void RefreshSpriteRenderer()
+    {
+        spriteRenderer.sprite = faces[value - 1];
+    }
+
 
     // Use this for initialization
     void Start()

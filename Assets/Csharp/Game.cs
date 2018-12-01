@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -31,7 +32,9 @@ public class Game : MonoBehaviour
     public bool nextStep = false;
     public int dicePoint = 0;
     public int blockPoint = 0;
-    public int dicesCount = 3;
+    public int dicesCount = 2;
+
+    public int TURNS_BEFORE_WINTER = 15;
 
     Dices dices;
 
@@ -60,6 +63,7 @@ public class Game : MonoBehaviour
 
         dicePoint = 0;
         gameCanvas.phaseText.text = "Upkeep";
+        gameCanvas.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " left B.W.";
         gameCanvas.dicePointText.text = "DP: " + dicePoint;
         gameCanvas.blockPointText.text = "BP: " + blockPoint;
     }
@@ -69,6 +73,7 @@ public class Game : MonoBehaviour
         gameCanvas.throwDices.gameObject.SetActive(true);
         gameCanvas.nextStep.gameObject.SetActive(false);
         dices.gameObject.SetActive(true);
+        dices.Unstable();
 
         gameCanvas.phaseText.text = "Throw dices!";
     }
@@ -114,6 +119,21 @@ public class Game : MonoBehaviour
         if (currentStep == TurnSteps.NEXT_TURN)
         {
             gameTurn++;
+
+            if (TURNS_BEFORE_WINTER - gameTurn <= 0)
+            {
+                if (villagers.GetComponentsInChildren<Villager>().Length > 0)
+                {
+                    SceneManager.LoadScene("victory");
+                }
+                else
+                {
+                    SceneManager.LoadScene("defeat");
+                }
+
+                return;
+            }
+
             currentStep = (TurnSteps)0;
         }
 

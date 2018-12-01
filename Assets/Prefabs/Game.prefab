@@ -63,3 +63,4 @@ MonoBehaviour:
   dicePoint: 0
   blockPoint: 0
   dicesCount: 3
+  TURNS_BEFORE_WINTER: 3

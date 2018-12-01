@@ -21,7 +21,7 @@ public class Dices : MonoBehaviour
         Dice dice = newDice.GetComponent<Dice>();
         dices.Add(dice);
 
-        dices[dices.Count - 1].Shuffle();
+        dices[dices.Count - 1].Stable();
         ReorderDices();
     }
 
@@ -43,7 +43,12 @@ public class Dices : MonoBehaviour
 
     public void Shuffle()
     {
-        dices.ForEach(dice => dice.Shuffle());
+        dices.ForEach(dice => dice.Stable());
+    }
+
+    public void Unstable()
+    {
+        dices.ForEach(dice => dice.Unstable());
     }
 
     void Update()
