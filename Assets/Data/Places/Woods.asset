@@ -8,8 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8121edf58eb5949538f03b562ff119f2, type: 3}
-  m_Name: +1 wood
+  m_Script: {fileID: 11500000, guid: 1ca24616dcfe34847adf49ec426c2e52, type: 3}
+  m_Name: Woods
   m_EditorClassIdentifier: 
-  value: 1
-  type: 2
+  type: 0
+  effect: {fileID: 11400000, guid: 93a2ff97400c04c569e22c7c9f666c82, type: 2}

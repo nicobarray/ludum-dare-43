@@ -4,10 +4,16 @@ using UnityEngine;
 public class Places : MonoBehaviour
 {
     public GameObject placePrefab;
+    public List<ScriptablePlace> scriptables;
 
     public List<Place> places;
 
-    public void AddPlace()
+    public void AddRandomPlace()
+    {
+        AddPlace(scriptables[Random.Range(0, scriptables.Count)]);
+    }
+
+    public void AddPlace(ScriptablePlace scriptable)
     {
         GameObject newPlace = Instantiate(
             placePrefab,
@@ -18,6 +24,7 @@ public class Places : MonoBehaviour
         newPlace.transform.SetParent(transform);
 
         Place place = newPlace.GetComponent<Place>();
+        place.scriptable = scriptable;
         places.Add(place);
 
         // places[places.Count - 1].Stable();
@@ -29,7 +36,7 @@ public class Places : MonoBehaviour
     {
         for (int i = 0; i < places.Count; i++)
         {
-            places[i].transform.localPosition = new Vector3(i * 1.5f, 0, 0);
+            places[i].transform.localPosition = new Vector3(i * 2f, 0, 0);
             places[i].name = "Place_" + i;
         }
     }

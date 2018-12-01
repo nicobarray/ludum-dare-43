@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8121edf58eb5949538f03b562ff119f2, type: 3}
-  m_Name: +1 wood
+  m_Name: +1 meal
   m_EditorClassIdentifier: 
   value: 1
-  type: 2
+  type: 3

@@ -75,6 +75,8 @@ public class Game : MonoBehaviour
         gameCanvas.add1Dice.gameObject.SetActive(false);
         gameCanvas.nextStep.gameObject.SetActive(false);
         dices.gameObject.SetActive(false);
+        places.gameObject.SetActive(false);
+        villagers.gameObject.SetActive(false);
 
         villagers.villagers.ForEach(vil =>
         {
@@ -82,7 +84,7 @@ public class Game : MonoBehaviour
         });
 
         dicePoint = 0;
-        gameCanvas.phaseText.text = "Upkeep";
+        gameCanvas.phaseText.text = "Dawn";
         gameCanvas.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " left B.W.";
         gameCanvas.dicePointText.text = "DP: " + dicePoint;
         gameCanvas.blockPointText.text = "BP: " + blockPoint;
@@ -119,6 +121,8 @@ public class Game : MonoBehaviour
         gameCanvas.throwDices.gameObject.SetActive(true);
         gameCanvas.nextStep.gameObject.SetActive(false);
         dices.gameObject.SetActive(true);
+        places.gameObject.SetActive(true);
+        villagers.gameObject.SetActive(true);
         dices.Unstable();
 
         gameCanvas.phaseText.text = "Throw dices!";
@@ -145,8 +149,16 @@ public class Game : MonoBehaviour
         });
     }
 
+    public IEnumerator WaitX(float time, Action callback)
+    {
+        yield return new WaitForSeconds(time);
+
+        callback();
+    }
+
     void EndStep()
     {
+        gameCanvas.nextStep.gameObject.SetActive(false);
         villagers.villagers.ForEach(vil =>
         {
             vil.canAct = false;
@@ -165,8 +177,24 @@ public class Game : MonoBehaviour
             }
         }
 
+        places.CollectWork();
+
         dices.gameObject.SetActive(false);
-        gameCanvas.phaseText.text = "Gathering time";
+        gameCanvas.phaseText.text = "Dusk";
+
+        StartCoroutine(WaitX(3, NextStep));
+    }
+
+    void CheckForVictory()
+    {
+        if (villagers.villagers.Count > 0)
+        {
+            SceneManager.LoadScene("victory");
+        }
+        else
+        {
+            SceneManager.LoadScene("defeat");
+        }
     }
 
     void NextStep()
@@ -179,14 +207,7 @@ public class Game : MonoBehaviour
 
             if (TURNS_BEFORE_WINTER - gameTurn <= 0)
             {
-                if (villagers.GetComponentsInChildren<Villager>().Length > 0)
-                {
-                    SceneManager.LoadScene("victory");
-                }
-                else
-                {
-                    SceneManager.LoadScene("defeat");
-                }
+                CheckForVictory();
 
                 return;
             }
@@ -238,6 +259,8 @@ public class Game : MonoBehaviour
         {
             ApplyEffect(eff);
         });
+
+        CheckForVictory();
     }
 
     void ApplyEffect(GameEffect eff)
@@ -351,7 +374,7 @@ public class Game : MonoBehaviour
 
         for (int i = 0; i < placesCount; i++)
         {
-            places.AddPlace();
+            places.AddRandomPlace();
         }
 
         UpkeepStep();

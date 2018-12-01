@@ -53,4 +53,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placePrefab: {fileID: 1298066545335462, guid: 8b7b7a94ea7a5495599c5a9ef4230bed,
     type: 2}
+  scriptables:
+  - {fileID: 11400000, guid: 4cc10ac4423e54c45b7216aecd58ee79, type: 2}
+  - {fileID: 11400000, guid: c054172c5b765434e95b2aab630e3ac4, type: 2}
+  - {fileID: 11400000, guid: bd7e6e91c91d54ac996ea7af0d558243, type: 2}
   places: []
