@@ -16,4 +16,5 @@ public class ScriptablePlace : ScriptableObject
 
     public Type type;
     public GameEffect effect;
+    public int diceCost;
 }

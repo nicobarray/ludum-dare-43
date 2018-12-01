@@ -13,3 +13,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   effect: {fileID: 11400000, guid: 93a2ff97400c04c569e22c7c9f666c82, type: 2}
+  diceCost: 1

@@ -9,13 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa461274e9e4a4f23bcd6a5a950b2009, type: 3}
-  m_Name: Death
+  m_Name: Raid-goods
   m_EditorClassIdentifier: 
-  eventDescription: Our oldest villager died last night. Distant relatives arrived
-    with honorary goods.
+  eventDescription: Bandits raided our village last night !
   image: {fileID: 0}
   turns: 1
   effects:
-  - {fileID: 11400000, guid: d593276a6b00a440e800e75256e3aed1, type: 2}
-  - {fileID: 11400000, guid: 36d7e20cf2de6410aa05d846026883fd, type: 2}
-  - {fileID: 11400000, guid: 1f0d09c0629bb4c6bbd9f486d2bc349b, type: 2}
+  - {fileID: 11400000, guid: b659f76bbffa943f2b1812be09e1dff0, type: 2}

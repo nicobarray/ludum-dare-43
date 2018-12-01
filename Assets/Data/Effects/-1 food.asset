@@ -8,9 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca24616dcfe34847adf49ec426c2e52, type: 3}
-  m_Name: Lake
+  m_Script: {fileID: 11500000, guid: 8121edf58eb5949538f03b562ff119f2, type: 3}
+  m_Name: -1 food
   m_EditorClassIdentifier: 
-  type: 2
-  effect: {fileID: 11400000, guid: 36d7e20cf2de6410aa05d846026883fd, type: 2}
-  diceCost: 3
+  value: -1
+  type: 3

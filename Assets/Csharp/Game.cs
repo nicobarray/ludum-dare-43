@@ -22,6 +22,7 @@ public class Game : MonoBehaviour
     public GameObject villagersPrefab;
     public GameObject placesPrefab;
     public GameEvent[] eventPool;
+    public ScriptableEventPair[] eventPairs;
 
     [Header("Scene References")]
     public GameCanvas gameCanvas;
@@ -66,49 +67,43 @@ public class Game : MonoBehaviour
             dicePoint = 0;
         }
 
-        gameCanvas.dicePointText.text = "DP: " + dicePoint;
+        gameCanvas.resourceTexts.dice.text = dicePoint.ToString();
     }
 
     void UpkeepStep()
     {
+        gameCanvas.ChangeStep(-125);
         gameCanvas.throwDices.gameObject.SetActive(false);
-        gameCanvas.add1Dice.gameObject.SetActive(false);
         gameCanvas.nextStep.gameObject.SetActive(false);
         dices.gameObject.SetActive(false);
         places.gameObject.SetActive(false);
         villagers.gameObject.SetActive(false);
 
-        villagers.villagers.ForEach(vil =>
-        {
-            vil.ResetPosition();
-        });
+        villagers.ReorderVillagers();
 
         dicePoint = 0;
-        gameCanvas.phaseText.text = "Dawn";
-        gameCanvas.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " left B.W.";
-        gameCanvas.dicePointText.text = "DP: " + dicePoint;
-        gameCanvas.blockPointText.text = "BP: " + blockPoint;
-        gameCanvas.mealsText.text = "Meals: " + meals;
-        gameCanvas.woodText.text = "Wood: " + wood;
-        gameCanvas.stoneText.text = "Stone: " + stone;
+        gameCanvas.timers.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " B.W.";
+        gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
+        gameCanvas.resourceTexts.dice.text = dicesCount.ToString();
+        gameCanvas.resourceTexts.food.text = meals.ToString();
+        gameCanvas.resourceTexts.wood.text = wood.ToString();
+        gameCanvas.resourceTexts.stone.text = stone.ToString();
 
-        if (eventPool.Length < 2)
+        gameCanvas.blockPointText.text = "BP: " + blockPoint.ToString();
+        gameCanvas.dicePointText.text = "DP: " + dicePoint.ToString();
+
+        if (eventPairs.Length == 0)
         {
             NextStep();
         }
 
-        int option1Index = UnityEngine.Random.Range(0, eventPool.Length);
-        int option2Index = UnityEngine.Random.Range(0, eventPool.Length);
-        while (option1Index == option2Index)
-        {
-            option2Index = UnityEngine.Random.Range(0, eventPool.Length);
-        }
+        ScriptableEventPair options = eventPairs[UnityEngine.Random.Range(0, eventPairs.Length)];
 
-        currentSelection[0] = eventPool[option1Index];
+        currentSelection[0] = options.option1;
         gameCanvas.eventOption1Image.sprite = currentSelection[0].image;
         gameCanvas.eventOption1Text.text = currentSelection[0].GetText();
 
-        currentSelection[1] = eventPool[option2Index];
+        currentSelection[1] = options.option2;
         gameCanvas.eventOption2Image.sprite = currentSelection[1].image;
         gameCanvas.eventOption2Text.text = currentSelection[1].GetText();
 
@@ -117,6 +112,7 @@ public class Game : MonoBehaviour
 
     void DicesStep()
     {
+        gameCanvas.ChangeStep(0);
         gameCanvas.eventFrame.SetActive(false);
         gameCanvas.throwDices.gameObject.SetActive(true);
         gameCanvas.nextStep.gameObject.SetActive(false);
@@ -125,14 +121,16 @@ public class Game : MonoBehaviour
         villagers.gameObject.SetActive(true);
         dices.Unstable();
 
-        gameCanvas.phaseText.text = "Throw dices!";
+        // gameCanvas.phaseText.text = "Throw dices!";
     }
 
     void DicesStep_ThrowDices()
     {
         dices.Shuffle();
         dices.dices.ForEach(dice => dicePoint += dice.value);
-        gameCanvas.dicePointText.text = "DP: " + dicePoint;
+
+        gameCanvas.dicePointText.text = "DP: " + dicePoint.ToString();
+
         NextStep();
 
         gameCanvas.throwDices.gameObject.SetActive(false);
@@ -140,8 +138,9 @@ public class Game : MonoBehaviour
 
     void MainStep()
     {
+        gameCanvas.ChangeStep(0);
         gameCanvas.nextStep.gameObject.SetActive(true);
-        gameCanvas.phaseText.text = "Act!";
+        // gameCanvas.phaseText.text = "Act!";
 
         villagers.villagers.ForEach(vil =>
         {
@@ -158,6 +157,7 @@ public class Game : MonoBehaviour
 
     void EndStep()
     {
+        gameCanvas.ChangeStep(115);
         gameCanvas.nextStep.gameObject.SetActive(false);
         villagers.villagers.ForEach(vil =>
         {
@@ -180,18 +180,26 @@ public class Game : MonoBehaviour
         places.CollectWork();
 
         dices.gameObject.SetActive(false);
-        gameCanvas.phaseText.text = "Dusk";
+        // gameCanvas.phaseText.text = "Dusk";
 
-        StartCoroutine(WaitX(3, NextStep));
+        StartCoroutine(WaitX(2, NextStep));
     }
 
-    void CheckForVictory()
+    void CheckForVictoryOrDefeat()
     {
         if (villagers.villagers.Count > 0)
         {
             SceneManager.LoadScene("victory");
         }
         else
+        {
+            SceneManager.LoadScene("defeat");
+        }
+    }
+
+    void CheckForDefeat()
+    {
+        if (villagers.villagers.Count <= 0)
         {
             SceneManager.LoadScene("defeat");
         }
@@ -207,8 +215,7 @@ public class Game : MonoBehaviour
 
             if (TURNS_BEFORE_WINTER - gameTurn <= 0)
             {
-                CheckForVictory();
-
+                CheckForVictoryOrDefeat();
                 return;
             }
 
@@ -260,11 +267,30 @@ public class Game : MonoBehaviour
             ApplyEffect(eff);
         });
 
-        CheckForVictory();
+        CheckForDefeat();
     }
 
     void ApplyEffect(GameEffect eff)
     {
+        Action<int> updateDices = (value) =>
+        {
+            dicesCount += value;
+            if (dicesCount < 0)
+            {
+                dicesCount = 0;
+            }
+
+            while (dices.dices.Count > dicesCount)
+            {
+                dices.RemoveDice(dices.dices[0]);
+            }
+
+            while (dices.dices.Count < dicesCount)
+            {
+                dices.AddDice();
+            }
+        };
+
         switch (eff.type)
         {
             case GameEffect.EffectType.Wood:
@@ -273,7 +299,7 @@ public class Game : MonoBehaviour
                 {
                     wood = 0;
                 }
-                gameCanvas.woodText.text = "Wood: " + wood;
+                gameCanvas.resourceTexts.wood.text = wood.ToString();
                 break;
             case GameEffect.EffectType.Stone:
                 stone += eff.value;
@@ -281,7 +307,7 @@ public class Game : MonoBehaviour
                 {
                     stone = 0;
                 }
-                gameCanvas.stoneText.text = "Stone: " + stone;
+                gameCanvas.resourceTexts.stone.text = stone.ToString();
                 break;
             case GameEffect.EffectType.Food:
                 meals += eff.value;
@@ -289,24 +315,10 @@ public class Game : MonoBehaviour
                 {
                     meals = 0;
                 }
-                gameCanvas.mealsText.text = "Meals: " + meals;
+                gameCanvas.resourceTexts.food.text = meals.ToString();
                 break;
             case GameEffect.EffectType.Dice:
-                dicesCount += eff.value;
-                if (dicesCount < 0)
-                {
-                    dicesCount = 0;
-                }
-
-                while (dices.dices.Count > dicesCount)
-                {
-                    dices.RemoveDice(dices.dices[0]);
-                }
-
-                while (dices.dices.Count < dicesCount)
-                {
-                    dices.AddDice();
-                }
+                updateDices(eff.value);
 
                 break;
             case GameEffect.EffectType.Villager:
@@ -326,6 +338,7 @@ public class Game : MonoBehaviour
                     villagers.AddVillager();
                 }
 
+                updateDices(eff.value);
                 break;
         }
     }
@@ -352,7 +365,6 @@ public class Game : MonoBehaviour
 
         // ? Link object between them here.
         gameCanvas.throwDices.onClick.AddListener(new UnityEngine.Events.UnityAction(DicesStep_ThrowDices));
-        gameCanvas.add1Dice.onClick.AddListener(new UnityEngine.Events.UnityAction(dices.AddDice));
         gameCanvas.nextStep.onClick.AddListener(new UnityEngine.Events.UnityAction(NextStep));
         gameCanvas.eventOption1.onClick.AddListener(new UnityEngine.Events.UnityAction(NextStep));
         gameCanvas.eventOption1.onClick.AddListener(new UnityEngine.Events.UnityAction(() => PickEffect(0)));
@@ -362,6 +374,8 @@ public class Game : MonoBehaviour
 
     void Start()
     {
+        gameCanvas.timers.stepClock.transform.localEulerAngles = new Vector3(0, 0, -125);
+
         for (int i = 0; i < dicesCount; i++)
         {
             dices.AddDice();
@@ -383,7 +397,6 @@ public class Game : MonoBehaviour
     void OnDisable()
     {
         gameCanvas.throwDices.onClick.RemoveAllListeners();
-        gameCanvas.add1Dice.onClick.RemoveAllListeners();
         gameCanvas.nextStep.onClick.RemoveAllListeners();
         gameCanvas.eventOption1.onClick.RemoveAllListeners();
         gameCanvas.eventOption2.onClick.RemoveAllListeners();

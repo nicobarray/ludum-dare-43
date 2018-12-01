@@ -25,7 +25,7 @@ public class Villagers : MonoBehaviour
         ReorderVillagers();
     }
 
-    void ReorderVillagers()
+    public void ReorderVillagers()
     {
         for (int i = 0; i < villagers.Count; i++)
         {

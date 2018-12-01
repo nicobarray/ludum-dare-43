@@ -60,6 +60,14 @@ MonoBehaviour:
   eventPool:
   - {fileID: 11400000, guid: 25654d64967834c349ce9c56cf8340ff, type: 2}
   - {fileID: 11400000, guid: a13681d75d8c74812bcddf8ec6729941, type: 2}
+  - {fileID: 11400000, guid: c1adff03d0a0341e08a16ee399bbd233, type: 2}
+  - {fileID: 11400000, guid: 0db1f6e56322e416cb3f1ce96a09c2c9, type: 2}
+  - {fileID: 11400000, guid: 96505972f6fc14c5e92242f9aabbdaaf, type: 2}
+  - {fileID: 11400000, guid: fa8150e795e7e4924948bec261ce8077, type: 2}
+  eventPairs:
+  - {fileID: 11400000, guid: 265403f4ed9c249198c5b2f881d20b33, type: 2}
+  - {fileID: 11400000, guid: 2f6be1b78ace24e598917bb42e8eccf5, type: 2}
+  - {fileID: 11400000, guid: f1a1c7b086a824ee796a8077aeb664e0, type: 2}
   gameCanvas: {fileID: 0}
   dicesOrigin: {fileID: 0}
   placesOrigin: {fileID: 0}
@@ -69,10 +77,10 @@ MonoBehaviour:
   nextStep: 0
   dicePoint: 0
   blockPoint: 0
-  dicesCount: 1
-  villagersCount: 1
+  dicesCount: 2
+  villagersCount: 2
   placesCount: 3
   wood: 0
   meals: 3
   stone: 0
-  TURNS_BEFORE_WINTER: 3
+  TURNS_BEFORE_WINTER: 15

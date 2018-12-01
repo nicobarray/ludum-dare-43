@@ -11,11 +11,6 @@ public class Villager : MonoBehaviour
     Vector3 positionBeforeDrag;
     Vector3 initialPosition;
 
-    public void ResetPosition()
-    {
-        transform.position = initialPosition;
-    }
-
     void Raycast(Action<RaycastHit[]> onRaycast)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -26,12 +21,6 @@ public class Villager : MonoBehaviour
         {
             onRaycast(hits);
         }
-    }
-
-    void Awake()
-    {
-        initialPosition = transform.position;
-
     }
 
     // Update is called once per frame
@@ -76,7 +65,7 @@ public class Villager : MonoBehaviour
                     }
                     else
                     {
-                        int points = Place.BaseDicePoint(p.scriptable.type);
+                        int points = p.scriptable.diceCost;
                         if (Game.instance.dicePoint >= points)
                         {
                             Game.instance.RemoveDicePoints(points);

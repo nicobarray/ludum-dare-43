@@ -55,7 +55,6 @@ public class Places : MonoBehaviour
             if (p.worker != null)
             {
                 Game.instance.CollectResourceFrom(p);
-                p.worker.ResetPosition();
                 p.worker = null;
             }
         });

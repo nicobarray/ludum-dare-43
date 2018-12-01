@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9239dad4582f74507b971517f42b549f, type: 3}
+  m_Name: Forest Fire VS Disease
+  m_EditorClassIdentifier: 
+  option1: {fileID: 11400000, guid: 1723e2533dd514d7abd8b86b09a3bccb, type: 2}
+  option2: {fileID: 11400000, guid: f32b679161a8643d6958aa051f36ff37, type: 2}

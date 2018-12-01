@@ -8,9 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca24616dcfe34847adf49ec426c2e52, type: 3}
-  m_Name: Lake
+  m_Script: {fileID: 11500000, guid: 9239dad4582f74507b971517f42b549f, type: 3}
+  m_Name: Birth VS Death
   m_EditorClassIdentifier: 
-  type: 2
-  effect: {fileID: 11400000, guid: 36d7e20cf2de6410aa05d846026883fd, type: 2}
-  diceCost: 3
+  option1: {fileID: 11400000, guid: 25654d64967834c349ce9c56cf8340ff, type: 2}
+  option2: {fileID: 11400000, guid: a13681d75d8c74812bcddf8ec6729941, type: 2}
