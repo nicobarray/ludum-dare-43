@@ -5,9 +5,6 @@ public class GameCanvas : MonoBehaviour
 {
     public Button throwDices;
     public Button add1Dice;
-
-    void Start()
-    {
-
-    }
+    public Button nextStep;
+    public TMPro.TextMeshProUGUI phaseText;
 }

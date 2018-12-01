@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Dices : MonoBehaviour
 {
-
     public GameObject dicePrefab;
 
     public List<Dice> dices;

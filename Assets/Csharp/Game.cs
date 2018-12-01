@@ -6,10 +6,11 @@ public class Game : MonoBehaviour
 {
     public enum TurnSteps
     {
-        Upkeep,
+        Upkeep = 0,
         Dices,
         Main,
-        Event
+        Event,
+        NEXT_TURN
     }
 
     [Header("Prefabs")]
@@ -20,10 +21,61 @@ public class Game : MonoBehaviour
     public GameCanvas gameCanvas;
 
     [Header("Game data (Read only)")]
-    public TurnSteps steps;
+    public TurnSteps currentStep = TurnSteps.Upkeep;
     public int gameTurn;
+    public bool nextStep = false;
 
     Dices dices;
+
+    void UpkeepStep()
+    {
+        gameCanvas.phaseText.text = "Upkeep";
+    }
+
+    void DicesStep()
+    {
+        gameCanvas.phaseText.text = "Throw dices!";
+    }
+
+    void MainStep()
+    {
+        gameCanvas.phaseText.text = "Act!";
+    }
+
+    void EndStep()
+    {
+        gameCanvas.phaseText.text = "Selected among 3";
+    }
+
+    void NextStep()
+    {
+        currentStep = (TurnSteps)(currentStep + 1);
+
+        if (currentStep == TurnSteps.NEXT_TURN)
+        {
+            gameTurn++;
+            currentStep = (TurnSteps)0;
+        }
+
+        switch (currentStep)
+        {
+            case TurnSteps.Upkeep:
+                UpkeepStep();
+                break;
+            case TurnSteps.Dices:
+                DicesStep();
+                break;
+            case TurnSteps.Main:
+                MainStep();
+                break;
+            case TurnSteps.Event:
+                EndStep();
+                break;
+            default:
+                Debug.LogError("Should not happen: " + currentStep);
+                break;
+        }
+    }
 
     void OnEnable()
     {
@@ -35,6 +87,7 @@ public class Game : MonoBehaviour
         // ? Link object between them here.
         gameCanvas.throwDices.onClick.AddListener(new UnityEngine.Events.UnityAction(dices.Shuffle));
         gameCanvas.add1Dice.onClick.AddListener(new UnityEngine.Events.UnityAction(dices.AddDice));
+        gameCanvas.nextStep.onClick.AddListener(new UnityEngine.Events.UnityAction(NextStep));
     }
 
     void OnDisable()
