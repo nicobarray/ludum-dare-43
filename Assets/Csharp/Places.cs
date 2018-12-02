@@ -24,7 +24,7 @@ public class Places : MonoBehaviour
         newPlace.transform.SetParent(transform);
 
         Place place = newPlace.GetComponent<Place>();
-        place.scriptable = scriptable;
+        place.Reset(scriptable);
         places.Add(place);
 
         // places[places.Count - 1].Stable();

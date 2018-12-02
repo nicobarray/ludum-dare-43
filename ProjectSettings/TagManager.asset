@@ -44,3 +44,6 @@ TagManager:
   - name: GameCanvas
     uniqueID: 2602459557
     locked: 0
+  - name: Buildings
+    uniqueID: 484784289
+    locked: 0
