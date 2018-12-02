@@ -6,6 +6,7 @@ using UnityEngine;
 public class Villager : MonoBehaviour
 {
     public bool canAct = true;
+    public TMPro.TextMeshPro hpText;
 
     bool drag = false;
     Vector3 positionBeforeDrag;
@@ -21,6 +22,15 @@ public class Villager : MonoBehaviour
     public void Hunger()
     {
         hp--;
+        hpText.text = hp + "/2";
+        hpText.color = Color.red;
+    }
+
+    public void Heal()
+    {
+        hp = 2;
+        hpText.text = "2/2";
+        hpText.color = Color.green;
     }
 
     void Raycast(Action<RaycastHit[]> onRaycast)

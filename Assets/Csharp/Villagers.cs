@@ -46,9 +46,9 @@ public class Villagers : MonoBehaviour
     {
         for (int i = villagers.Count - 1; i >= 0; i--)
         {
+            Villager vil = villagers[i];
             if (Game.instance.meals <= 0)
             {
-                Villager vil = villagers[i];
                 vil.Hunger();
 
                 if (vil.IsDead())
@@ -63,6 +63,8 @@ public class Villagers : MonoBehaviour
                 eff.value = -1;
 
                 ApplyEffect(eff);
+
+                vil.Heal();
 
                 Destroy(eff);
             }
