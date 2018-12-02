@@ -19,6 +19,9 @@ public class GameCanvas : MonoBehaviour
     public TMPro.TextMeshProUGUI eventOption1Text;
     public TMPro.TextMeshProUGUI eventOption2Text;
 
+    public FloatingText floatingTextPrefab;
+    public Canvas aboveAllCanvas;
+
     [Serializable]
     public struct Timers
     {
@@ -56,5 +59,11 @@ public class GameCanvas : MonoBehaviour
             t += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    public void PopFloatingText(Transform transform, int value)
+    {
+        FloatingText newFloatingText = Instantiate(floatingTextPrefab, aboveAllCanvas.transform);
+        newFloatingText.Reset(transform.position, value);
     }
 }

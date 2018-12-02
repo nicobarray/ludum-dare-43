@@ -75,6 +75,8 @@ public class Game : MonoBehaviour
         gameCanvas.ChangeStep(-125);
         gameCanvas.throwDices.gameObject.SetActive(false);
         gameCanvas.nextStep.gameObject.SetActive(false);
+        gameCanvas.dicePointText.gameObject.SetActive(false);
+
         dices.gameObject.SetActive(false);
         places.gameObject.SetActive(false);
         villagers.gameObject.SetActive(false);
@@ -83,6 +85,7 @@ public class Game : MonoBehaviour
 
         dicePoint = 0;
         gameCanvas.timers.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " B.W.";
+
         gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
         gameCanvas.resourceTexts.dice.text = dicesCount.ToString();
         gameCanvas.resourceTexts.food.text = meals.ToString();
@@ -90,7 +93,7 @@ public class Game : MonoBehaviour
         gameCanvas.resourceTexts.stone.text = stone.ToString();
 
         gameCanvas.blockPointText.text = "BP: " + blockPoint.ToString();
-        gameCanvas.dicePointText.text = "DP: " + dicePoint.ToString();
+        gameCanvas.dicePointText.text = dicePoint.ToString();
 
         if (eventPairs.Length == 0)
         {
@@ -116,6 +119,8 @@ public class Game : MonoBehaviour
         gameCanvas.eventFrame.SetActive(false);
         gameCanvas.throwDices.gameObject.SetActive(true);
         gameCanvas.nextStep.gameObject.SetActive(false);
+        gameCanvas.dicePointText.gameObject.SetActive(true);
+
         dices.gameObject.SetActive(true);
         places.gameObject.SetActive(true);
         villagers.gameObject.SetActive(true);
@@ -129,7 +134,8 @@ public class Game : MonoBehaviour
         dices.Shuffle();
         dices.dices.ForEach(dice => dicePoint += dice.value);
 
-        gameCanvas.dicePointText.text = "DP: " + dicePoint.ToString();
+        gameCanvas.dicePointText.text = dicePoint.ToString();
+        gameCanvas.PopFloatingText(gameCanvas.dicePointText.transform, dicePoint);
 
         NextStep();
 
@@ -180,7 +186,7 @@ public class Game : MonoBehaviour
         places.CollectWork();
 
         dices.gameObject.SetActive(false);
-        // gameCanvas.phaseText.text = "Dusk";
+        gameCanvas.PopFloatingText(gameCanvas.timers.turnText.transform, -1);
 
         StartCoroutine(WaitX(2, NextStep));
     }
@@ -289,6 +295,8 @@ public class Game : MonoBehaviour
             {
                 dices.AddDice();
             }
+
+            gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, value);
         };
 
         switch (eff.type)
@@ -300,6 +308,7 @@ public class Game : MonoBehaviour
                     wood = 0;
                 }
                 gameCanvas.resourceTexts.wood.text = wood.ToString();
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.wood.transform, eff.value);
                 break;
             case GameEffect.EffectType.Stone:
                 stone += eff.value;
@@ -308,6 +317,7 @@ public class Game : MonoBehaviour
                     stone = 0;
                 }
                 gameCanvas.resourceTexts.stone.text = stone.ToString();
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.stone.transform, eff.value);
                 break;
             case GameEffect.EffectType.Food:
                 meals += eff.value;
@@ -316,6 +326,7 @@ public class Game : MonoBehaviour
                     meals = 0;
                 }
                 gameCanvas.resourceTexts.food.text = meals.ToString();
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.food.transform, eff.value);
                 break;
             case GameEffect.EffectType.Dice:
                 updateDices(eff.value);
@@ -323,10 +334,14 @@ public class Game : MonoBehaviour
                 break;
             case GameEffect.EffectType.Villager:
                 villagersCount += eff.value;
+
                 if (villagersCount < 0)
                 {
                     villagersCount = 0;
                 }
+
+                gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.villager.transform, eff.value);
 
                 while (villagers.villagers.Count > villagersCount)
                 {
@@ -388,7 +403,7 @@ public class Game : MonoBehaviour
 
         for (int i = 0; i < placesCount; i++)
         {
-            places.AddRandomPlace();
+            places.AddPlace(places.scriptables[i]);
         }
 
         UpkeepStep();
