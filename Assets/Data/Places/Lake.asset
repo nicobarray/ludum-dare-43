@@ -14,6 +14,5 @@ MonoBehaviour:
   type: 2
   effect: {fileID: 11400000, guid: 36d7e20cf2de6410aa05d846026883fd, type: 2}
   diceCost: 3
-  sprite: {fileID: 0}
-  visualPrefab: {fileID: 1366206744244354, guid: 0f46fa14d35f4493bb4666a28abaaa03,
-    type: 2}
+  sprite: {fileID: 21300000, guid: 4c9ffc0ba6ebe45bab450f0cdb57127a, type: 3}
+  visualPrefab: {fileID: 0}

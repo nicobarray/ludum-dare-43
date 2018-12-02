@@ -83,6 +83,7 @@ public class Villager : MonoBehaviour
                             Game.instance.RemoveDicePoints(points);
                             canAct = false;
                             p.worker = this;
+                            transform.position = p.transform.GetChild(0).position;
                         }
                         else
                         {
