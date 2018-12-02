@@ -26,6 +26,7 @@ public class Game : MonoBehaviour
 
     [Header("Scene References")]
     public GameCanvas gameCanvas;
+    public Dice3DBox dice3DBox;
     public Transform dicesOrigin;
     public Transform placesOrigin;
     public Transform villagersOrigin;

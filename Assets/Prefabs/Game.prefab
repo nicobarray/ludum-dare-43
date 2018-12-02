@@ -69,6 +69,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2f6be1b78ace24e598917bb42e8eccf5, type: 2}
   - {fileID: 11400000, guid: f1a1c7b086a824ee796a8077aeb664e0, type: 2}
   gameCanvas: {fileID: 0}
+  dice3DBox: {fileID: 0}
   dicesOrigin: {fileID: 0}
   placesOrigin: {fileID: 0}
   villagersOrigin: {fileID: 0}
@@ -79,7 +80,7 @@ MonoBehaviour:
   blockPoint: 0
   dicesCount: 2
   villagersCount: 2
-  placesCount: 3
+  placesCount: 5
   wood: 0
   meals: 3
   stone: 0
