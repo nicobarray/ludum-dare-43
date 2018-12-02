@@ -25,6 +25,8 @@ public class Dice3D : MonoBehaviour
 
         this.target = target;
         this.floor = floor;
+
+        transform.position = target.position;
     }
 
     public void Throw()
@@ -32,8 +34,6 @@ public class Dice3D : MonoBehaviour
         value = -1;
         float force = 250;
         float angle = UnityEngine.Random.Range(0, 360);
-
-        transform.position = target.position;
 
         float xForce = 250 + UnityEngine.Random.Range(-force, force) / 2;
         float yForce = 250 + UnityEngine.Random.Range(-force, force) / 2.5f;

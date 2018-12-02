@@ -27,7 +27,6 @@ public class Game : MonoBehaviour
     [Header("Scene References")]
     public GameCanvas gameCanvas;
     public Dice3DBox dice3DBox;
-    public Transform dicesOrigin;
     public Transform placesOrigin;
     public Transform villagersOrigin;
 
@@ -47,7 +46,6 @@ public class Game : MonoBehaviour
 
     public int TURNS_BEFORE_WINTER = 15;
 
-    Dices dices;
     Places places;
     Villagers villagers;
 
@@ -68,7 +66,7 @@ public class Game : MonoBehaviour
             dicePoint = 0;
         }
 
-        gameCanvas.resourceTexts.dice.text = dicePoint.ToString();
+        gameCanvas.dicePointText.text = dicePoint.ToString();
     }
 
     void UpkeepStep()
@@ -84,7 +82,8 @@ public class Game : MonoBehaviour
         gameCanvas.nextStep.gameObject.SetActive(false);
         gameCanvas.dicePointText.gameObject.SetActive(false);
 
-        dices.gameObject.SetActive(false);
+        dice3DBox.Reset();
+        dice3DBox.gameObject.SetActive(false);
         places.gameObject.SetActive(false);
         villagers.gameObject.SetActive(false);
 
@@ -127,25 +126,26 @@ public class Game : MonoBehaviour
         gameCanvas.nextStep.gameObject.SetActive(false);
         gameCanvas.dicePointText.gameObject.SetActive(true);
 
-        dices.gameObject.SetActive(true);
+        dice3DBox.gameObject.SetActive(true);
+
         places.gameObject.SetActive(true);
         villagers.gameObject.SetActive(true);
-        dices.Unstable();
 
         // gameCanvas.phaseText.text = "Throw dices!";
     }
 
     void DicesStep_ThrowDices()
     {
-        dices.Shuffle();
-        dices.dices.ForEach(dice => dicePoint += dice.value);
+        dice3DBox.Throw(dicesCount, (diceValue) => { Debug.Log("Got " + diceValue + " !"); }, (total) =>
+        {
+            dicePoint = total;
+            gameCanvas.dicePointText.text = dicePoint.ToString();
+            gameCanvas.PopFloatingText(gameCanvas.dicePointText.transform, dicePoint);
 
-        gameCanvas.dicePointText.text = dicePoint.ToString();
-        gameCanvas.PopFloatingText(gameCanvas.dicePointText.transform, dicePoint);
+            NextStep();
 
-        NextStep();
-
-        gameCanvas.throwDices.gameObject.SetActive(false);
+            gameCanvas.throwDices.gameObject.SetActive(false);
+        });
     }
 
     void MainStep()
@@ -191,7 +191,8 @@ public class Game : MonoBehaviour
 
         places.CollectWork();
 
-        dices.gameObject.SetActive(false);
+        dice3DBox.Reset();
+        dice3DBox.gameObject.SetActive(false);
 
         StartCoroutine(WaitX(2, NextStep));
     }
@@ -291,16 +292,7 @@ public class Game : MonoBehaviour
                 dicesCount = 0;
             }
 
-            while (dices.dices.Count > dicesCount)
-            {
-                dices.RemoveDice(dices.dices[0]);
-            }
-
-            while (dices.dices.Count < dicesCount)
-            {
-                dices.AddDice();
-            }
-
+            gameCanvas.resourceTexts.dice.text = dicesCount.ToString();
             gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, value);
         };
 
@@ -376,10 +368,7 @@ public class Game : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Assert(dicesOrigin != null, "Place the dices origin somewhere on the scene !");
-
         // ? Instantiate what needs to be initiated before game start here. 
-        dices = Instantiate(dicesPrefab, dicesOrigin.position, Quaternion.identity).GetComponent<Dices>();
         places = Instantiate(placesPrefab, placesOrigin.position, Quaternion.identity).GetComponent<Places>();
         villagers = Instantiate(villagersPrefab, villagersOrigin.position, Quaternion.identity).GetComponent<Villagers>();
 
@@ -395,11 +384,6 @@ public class Game : MonoBehaviour
     void Start()
     {
         gameCanvas.timers.stepClock.transform.localEulerAngles = new Vector3(0, 0, -125);
-
-        for (int i = 0; i < dicesCount; i++)
-        {
-            dices.AddDice();
-        }
 
         for (int i = 0; i < villagersCount; i++)
         {

@@ -10,7 +10,7 @@ public class Dice3DBox : MonoBehaviour
     public Transform spawnOrigin;
     public Transform floor;
 
-    List<Dice3D> dices;
+    List<Dice3D> dices = new List<Dice3D>();
     Coroutine coroutine;
 
     public void Throw(int count, Action<int> onDiceStabilize, Action<int> onTotal)
@@ -34,6 +34,8 @@ public class Dice3DBox : MonoBehaviour
                 score += value;
                 onDiceStabilize(value);
             };
+
+            dice.Throw();
             yield return new WaitForSeconds(1);
         }
 
