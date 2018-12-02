@@ -9,7 +9,6 @@ public class GameCanvas : MonoBehaviour
     public Button nextStep;
 
     public TMPro.TextMeshProUGUI blockPointText;
-    public TMPro.TextMeshProUGUI dicePointText;
 
     public GameObject eventFrame;
     public Button eventOption1;

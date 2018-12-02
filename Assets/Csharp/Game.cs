@@ -66,7 +66,7 @@ public class Game : MonoBehaviour
             dicePoint = 0;
         }
 
-        gameCanvas.dicePointText.text = dicePoint.ToString();
+        gameCanvas.resourceTexts.dice.text = dicePoint.ToString();
     }
 
     void UpkeepStep()
@@ -80,7 +80,6 @@ public class Game : MonoBehaviour
         gameCanvas.ChangeStep(-125);
         gameCanvas.throwDices.gameObject.SetActive(false);
         gameCanvas.nextStep.gameObject.SetActive(false);
-        gameCanvas.dicePointText.gameObject.SetActive(false);
 
         dice3DBox.Reset();
         dice3DBox.gameObject.SetActive(false);
@@ -98,7 +97,6 @@ public class Game : MonoBehaviour
         gameCanvas.resourceTexts.stone.text = stone.ToString();
 
         gameCanvas.blockPointText.text = "BP: " + blockPoint.ToString();
-        gameCanvas.dicePointText.text = dicePoint.ToString();
 
         if (eventPairs.Length == 0)
         {
@@ -124,27 +122,28 @@ public class Game : MonoBehaviour
         gameCanvas.eventFrame.SetActive(false);
         gameCanvas.throwDices.gameObject.SetActive(true);
         gameCanvas.nextStep.gameObject.SetActive(false);
-        gameCanvas.dicePointText.gameObject.SetActive(true);
 
         dice3DBox.gameObject.SetActive(true);
 
-        places.gameObject.SetActive(true);
-        villagers.gameObject.SetActive(true);
-
-        // gameCanvas.phaseText.text = "Throw dices!";
+        places.gameObject.SetActive(false);
+        villagers.gameObject.SetActive(false);
     }
 
     void DicesStep_ThrowDices()
     {
+        gameCanvas.throwDices.gameObject.SetActive(false);
+
         dice3DBox.Throw(dicesCount, (diceValue) => { Debug.Log("Got " + diceValue + " !"); }, (total) =>
         {
             dicePoint = total;
-            gameCanvas.dicePointText.text = dicePoint.ToString();
-            gameCanvas.PopFloatingText(gameCanvas.dicePointText.transform, dicePoint);
+            gameCanvas.resourceTexts.dice.text = dicePoint.ToString();
+            gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, dicePoint);
 
             NextStep();
 
             gameCanvas.throwDices.gameObject.SetActive(false);
+            dice3DBox.Reset();
+            dice3DBox.gameObject.SetActive(false);
         });
     }
 
@@ -152,7 +151,8 @@ public class Game : MonoBehaviour
     {
         gameCanvas.ChangeStep(0);
         gameCanvas.nextStep.gameObject.SetActive(true);
-        // gameCanvas.phaseText.text = "Act!";
+        villagers.gameObject.SetActive(true);
+        places.gameObject.SetActive(true);
 
         villagers.villagers.ForEach(vil =>
         {
