@@ -32,7 +32,7 @@ public class Game : MonoBehaviour
 
     [Header("Game data (Read only)")]
     public TurnSteps currentStep = TurnSteps.Upkeep;
-    public int gameTurn;
+    public int gameTurn = 0;
     public bool nextStep = false;
     public int dicePoint = 0;
     public int blockPoint = 0;
@@ -72,6 +72,12 @@ public class Game : MonoBehaviour
 
     void UpkeepStep()
     {
+        if (gameTurn > 1)
+        {
+            gameCanvas.PopFloatingText(gameCanvas.timers.turnText.transform, -1);
+        }
+        gameCanvas.timers.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " B.W.";
+
         gameCanvas.ChangeStep(-125);
         gameCanvas.throwDices.gameObject.SetActive(false);
         gameCanvas.nextStep.gameObject.SetActive(false);
@@ -84,7 +90,6 @@ public class Game : MonoBehaviour
         villagers.ReorderVillagers();
 
         dicePoint = 0;
-        gameCanvas.timers.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " B.W.";
 
         gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
         gameCanvas.resourceTexts.dice.text = dicesCount.ToString();
@@ -186,7 +191,6 @@ public class Game : MonoBehaviour
         places.CollectWork();
 
         dices.gameObject.SetActive(false);
-        gameCanvas.PopFloatingText(gameCanvas.timers.turnText.transform, -1);
 
         StartCoroutine(WaitX(2, NextStep));
     }
