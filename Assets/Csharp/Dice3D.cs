@@ -67,7 +67,7 @@ public class Dice3D : MonoBehaviour
                     {
                         float distance = Vector3.Distance(faces[i].position, h.point);
 
-                        if (distance > 0.1f)
+                        if (distance > 0.05f)
                         {
                             rethrow = true;
                             break;

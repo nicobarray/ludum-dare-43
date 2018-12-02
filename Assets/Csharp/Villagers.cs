@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,5 +40,33 @@ public class Villagers : MonoBehaviour
         Destroy(villager.gameObject);
         villagers.Remove(villager);
         ReorderVillagers();
+    }
+
+    public void Eat(Action<GameEffect> ApplyEffect)
+    {
+        for (int i = villagers.Count - 1; i >= 0; i--)
+        {
+            if (Game.instance.meals <= 0)
+            {
+                Villager vil = villagers[i];
+                vil.Hunger();
+
+                if (vil.IsDead())
+                {
+                    RemoveVillager(vil);
+                }
+            }
+            else
+            {
+                var eff = ScriptableObject.CreateInstance<GameEffect>();
+                eff.type = GameEffect.EffectType.Food;
+                eff.value = -1;
+
+                ApplyEffect(eff);
+
+                Destroy(eff);
+            }
+        }
+
     }
 }

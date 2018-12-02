@@ -9,7 +9,8 @@ public class GameEffect : ScriptableObject
         Dice,
         Wood,
         Food,
-        Stone
+        Stone,
+        Block
     }
 
     public int value;

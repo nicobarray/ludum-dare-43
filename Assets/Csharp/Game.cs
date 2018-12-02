@@ -190,6 +190,7 @@ public class Game : MonoBehaviour
         }
 
         places.CollectWork();
+        villagers.Eat(ApplyEffect);
 
         dice3DBox.Reset();
         dice3DBox.gameObject.SetActive(false);
@@ -296,6 +297,18 @@ public class Game : MonoBehaviour
             gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, value);
         };
 
+        Action<int> updateBlock = (value) =>
+        {
+            blockPoint += value;
+            if (blockPoint < 0)
+            {
+                blockPoint = 0;
+            }
+
+            gameCanvas.blockPointText.text = blockPoint.ToString();
+            gameCanvas.PopFloatingText(gameCanvas.blockPointText.transform, value);
+        };
+
         switch (eff.type)
         {
             case GameEffect.EffectType.Wood:
@@ -330,7 +343,16 @@ public class Game : MonoBehaviour
 
                 break;
             case GameEffect.EffectType.Villager:
-                villagersCount += eff.value;
+                int value = eff.value;
+
+                // Block points take for the villager.
+                if (blockPoint > 0 && value < 0)
+                {
+                    value = eff.value - blockPoint;
+                    updateBlock(eff.value);
+                }
+
+                villagersCount += value;
 
                 if (villagersCount < 0)
                 {
@@ -338,7 +360,7 @@ public class Game : MonoBehaviour
                 }
 
                 gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
-                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.villager.transform, eff.value);
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.villager.transform, value);
 
                 while (villagers.villagers.Count > villagersCount)
                 {
@@ -351,6 +373,9 @@ public class Game : MonoBehaviour
                 }
 
                 updateDices(eff.value);
+                break;
+            case GameEffect.EffectType.Block:
+                updateBlock(eff.value);
                 break;
         }
     }

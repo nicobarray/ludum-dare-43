@@ -11,6 +11,18 @@ public class Villager : MonoBehaviour
     Vector3 positionBeforeDrag;
     Vector3 initialPosition;
 
+    public int hp = 2;
+
+    public bool IsDead()
+    {
+        return hp <= 0;
+    }
+
+    public void Hunger()
+    {
+        hp--;
+    }
+
     void Raycast(Action<RaycastHit[]> onRaycast)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
