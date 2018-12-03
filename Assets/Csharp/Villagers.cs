@@ -42,7 +42,7 @@ public class Villagers : MonoBehaviour
         ReorderVillagers();
     }
 
-    public void Eat(Action<GameEffect> ApplyEffect)
+    public void Eat()
     {
         for (int i = villagers.Count - 1; i >= 0; i--)
         {
@@ -62,7 +62,7 @@ public class Villagers : MonoBehaviour
                 eff.type = GameEffect.EffectType.Food;
                 eff.value = -1;
 
-                ApplyEffect(eff);
+                Game.instance.gameCanvas.effectLog.AddEffect(eff);
 
                 vil.Heal();
 

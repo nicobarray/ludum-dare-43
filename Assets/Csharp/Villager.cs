@@ -91,6 +91,7 @@ public class Villager : MonoBehaviour
                         if (Game.instance.dicePoint >= points)
                         {
                             Game.instance.RemoveDicePoints(points);
+                            Game.instance.gameCanvas.effectLog.AddEffect(p.scriptable.effect);
                             canAct = false;
                             p.worker = this;
                             transform.position = p.transform.GetChild(0).position;

@@ -189,13 +189,12 @@ public class Game : MonoBehaviour
             }
         }
 
-        places.CollectWork();
-        villagers.Eat(ApplyEffect);
-
         dice3DBox.Reset();
         dice3DBox.gameObject.SetActive(false);
 
-        StartCoroutine(WaitX(2, NextStep));
+        // places.CollectWork();
+        villagers.Eat();
+        gameCanvas.effectLog.ApplyEffects(() => StartCoroutine(WaitX(1, NextStep)));
     }
 
     void CheckForVictoryOrDefeat()
@@ -283,7 +282,7 @@ public class Game : MonoBehaviour
         CheckForDefeat();
     }
 
-    void ApplyEffect(GameEffect eff)
+    public void ApplyEffect(GameEffect eff)
     {
         Action<int> updateDices = (value) =>
         {

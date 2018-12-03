@@ -12,7 +12,7 @@ public class GameEvent : ScriptableObject
 
     public string GetText()
     {
-        string textEffects = turns > 1 ? ("<i>Take effect for " + turns + " turns</i>") : "<i>Take effect immediatly</i>";
+        string textEffects = turns > 1 ? ("<i>Take effect for " + turns + " turns (end of turn)</i>") : "<i>Take effect now.</i>";
 
         Array.ForEach(effects, effect =>
         {

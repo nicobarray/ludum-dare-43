@@ -21,6 +21,8 @@ public class GameCanvas : MonoBehaviour
     public FloatingText floatingTextPrefab;
     public Canvas aboveAllCanvas;
 
+    public EffectLogUIComponent effectLog;
+
     [Serializable]
     public struct Timers
     {
@@ -60,9 +62,15 @@ public class GameCanvas : MonoBehaviour
         }
     }
 
-    public void PopFloatingText(Transform transform, int value)
+    public void PopFloatingText(Transform target, int value)
     {
         FloatingText newFloatingText = Instantiate(floatingTextPrefab, aboveAllCanvas.transform);
-        newFloatingText.Reset(transform.position, value);
+        newFloatingText.Reset(target.position, value);
+    }
+
+    public void PopFloatingText(Vector3 position, string value)
+    {
+        FloatingText newFloatingText = Instantiate(floatingTextPrefab, aboveAllCanvas.transform);
+        newFloatingText.Reset(position, value);
     }
 }

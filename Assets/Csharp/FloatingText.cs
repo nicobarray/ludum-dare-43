@@ -9,6 +9,13 @@ public class FloatingText : MonoBehaviour
 
     public float lifetime = 1f;
 
+    public void Reset(Vector3 position, string value)
+    {
+        negative.text = value;
+        positive.gameObject.SetActive(false);
+        transform.position = new Vector3(position.x, position.y, transform.position.z);
+    }
+
     public void Reset(Vector3 position, int value)
     {
         if (value > 0)
