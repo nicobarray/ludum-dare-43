@@ -14,35 +14,52 @@ public class EffectLogUIComponent : MonoBehaviour
     Stack<EffectUIComponent> _effects = new Stack<EffectUIComponent>();
     Coroutine _coroutine;
 
-    public void AddEffect(GameEffect effect)
+    public void AddEvent(GameEvent gameEvent)
+    {
+        foreach (var effect in gameEvent.effects)
+        {
+            AddEffect(effect.type, effect.value);
+        }
+    }
+
+    public void AddEffect(GameEffect.EffectType type, int value, object target = null)
+    {
+        GameEffect eff = GameEffect.CreateInstance<GameEffect>();
+        eff.type = type;
+        eff.value = value;
+        AddEffect(eff, target);
+        Destroy(eff);
+    }
+
+    public void AddEffect(GameEffect effect, object target = null)
     {
         EffectUIComponent effectUIComponent = Instantiate(effectUIPrefab, stack);
-        effectUIComponent.Reset(effect);
+        effectUIComponent.transform.SetAsFirstSibling();
+
+        effectUIComponent.Reset(effect, target);
         _effects.Push(effectUIComponent);
     }
 
-    public void ApplyEffects(Action onAfterEffect)
+    public void ApplyEffects()
     {
         if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
         }
 
-        _coroutine = StartCoroutine(ApplyEffectAsync(onAfterEffect));
+        _coroutine = StartCoroutine(ApplyEffectsAsync());
     }
 
-    IEnumerator ApplyEffectAsync(Action onAfterEffect)
+    public IEnumerator ApplyEffectsAsync()
     {
         while (_effects.Count > 0)
         {
             EffectUIComponent effectUIComponent = _effects.Pop();
 
             effectUIComponent.ApplyEffect();
-
-            yield return new WaitForSeconds(.33f);
             Destroy(effectUIComponent.gameObject);
-        }
 
-        onAfterEffect();
+            yield return new WaitForSeconds(1.5f);
+        }
     }
 }

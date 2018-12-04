@@ -3,8 +3,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public enum TextKind
+{
+    Positive,
+    Negative,
+    Neutral
+}
+
 public class GameCanvas : MonoBehaviour
 {
+
     public Button throwDices;
     public Button nextStep;
 
@@ -68,9 +77,9 @@ public class GameCanvas : MonoBehaviour
         newFloatingText.Reset(target.position, value);
     }
 
-    public void PopFloatingText(Vector3 position, string value)
+    public void PopFloatingText(Vector3 position, string value, TextKind kind)
     {
         FloatingText newFloatingText = Instantiate(floatingTextPrefab, aboveAllCanvas.transform);
-        newFloatingText.Reset(position, value);
+        newFloatingText.Reset(position, value, kind);
     }
 }

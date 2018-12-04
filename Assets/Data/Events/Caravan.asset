@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa461274e9e4a4f23bcd6a5a950b2009, type: 3}
+  m_Name: Caravan
+  m_EditorClassIdentifier: 
+  eventDescription: A trade caravan passes through the city. Your townfolks offer
+    them chelter and good food for the night.
+  image: {fileID: 0}
+  turns: 1
+  effects:
+  - {fileID: 11400000, guid: b659f76bbffa943f2b1812be09e1dff0, type: 2}
+  - {fileID: 11400000, guid: 12f46f672ef3249358c5022b63f01b41, type: 2}
+  - {fileID: 11400000, guid: 84aa064fd6730487a9706e41fb2f778b, type: 2}

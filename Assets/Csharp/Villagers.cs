@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,12 @@ public class Villagers : MonoBehaviour
     public GameObject villagerPrefab;
 
     public List<Villager> villagers;
+
+    private Comparison<Villager> hpSorter = new Comparison<Villager>((left, right) =>
+            {
+                return left.hp - right.hp;
+            });
+    private Coroutine _coroutine;
 
     public void AddVillager()
     {
@@ -42,33 +49,56 @@ public class Villagers : MonoBehaviour
         ReorderVillagers();
     }
 
+    public void Reset()
+    {
+        villagers.ForEach(vil =>
+        {
+            vil.canAct = false;
+        });
+    }
+
     public void Eat()
     {
-        for (int i = villagers.Count - 1; i >= 0; i--)
+        if (_coroutine != null)
         {
-            Villager vil = villagers[i];
-            if (Game.instance.meals <= 0)
-            {
-                vil.Hunger();
+            StopCoroutine(_coroutine);
+        }
 
-                if (vil.IsDead())
-                {
-                    RemoveVillager(vil);
-                }
+        _coroutine = StartCoroutine(EatAsync());
+    }
+
+    public IEnumerator EatAsync()
+    {
+        List<Villager> sortedVillagers = new List<Villager>(villagers);
+        sortedVillagers.Sort(hpSorter);
+
+        List<Villager> dead = new List<Villager>();
+        int food = Game.instance.meals;
+        foreach (var vil in sortedVillagers)
+        {
+            if (food > 0)
+            {
+                food--;
+
+                Game.instance.ApplyEffect(GameEffect.EffectType.Food, -1);
+
+                vil.Heal();
+                Game.instance.gameCanvas.PopFloatingText(vil.transform.position, "Tasty", TextKind.Neutral);
             }
             else
             {
-                var eff = ScriptableObject.CreateInstance<GameEffect>();
-                eff.type = GameEffect.EffectType.Food;
-                eff.value = -1;
+                vil.Hunger();
+                Game.instance.gameCanvas.PopFloatingText(vil.transform.position, "Hungry", TextKind.Negative);
 
-                Game.instance.gameCanvas.effectLog.AddEffect(eff);
-
-                vil.Heal();
-
-                Destroy(eff);
+                if (vil.IsDead())
+                {
+                    Game.instance.ApplyEffect(GameEffect.EffectType.Villager, -1, vil);
+                }
             }
+
+            yield return new WaitForSeconds(1.5f);
         }
 
+        _coroutine = null;
     }
 }

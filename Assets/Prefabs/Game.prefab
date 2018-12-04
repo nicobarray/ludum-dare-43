@@ -68,9 +68,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 265403f4ed9c249198c5b2f881d20b33, type: 2}
   - {fileID: 11400000, guid: 2f6be1b78ace24e598917bb42e8eccf5, type: 2}
   - {fileID: 11400000, guid: f1a1c7b086a824ee796a8077aeb664e0, type: 2}
+  - {fileID: 11400000, guid: 5ae031626574747968df65691d39faa7, type: 2}
+  - {fileID: 11400000, guid: bc87696f63c7d4335baa517c30f914a4, type: 2}
   gameCanvas: {fileID: 0}
   dice3DBox: {fileID: 0}
-  dicesOrigin: {fileID: 0}
   placesOrigin: {fileID: 0}
   villagersOrigin: {fileID: 0}
   currentStep: 0

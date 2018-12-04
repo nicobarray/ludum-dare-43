@@ -8,19 +8,19 @@ public class Place : MonoBehaviour
         switch (placeType)
         {
             case ScriptablePlace.Type.Woods:
-                return "Woods";
+                return "<b>Woods</b>: Cut some trees to build structures, pay tributes or trade. Adds <color=#55F>+1 wood</color> at the end of turn.";
             case ScriptablePlace.Type.Mines:
-                return "Mines";
+                return "<b>Mines</b>: Pick some rocks to build structures, pay tributes or trade. Adds <color=#55F>+1 stone</color> at the end of turn.";
             case ScriptablePlace.Type.Lake:
-                return "Lake";
+                return "<b>Lake</b>: Fish some food to sustain your people. Adds <color=#55F>+1 food</color> at the end of turn.";
             case ScriptablePlace.Type.BuildersHut:
-                return "Builder's Hut";
+                return "<b>Builder's Hut</b>";
             case ScriptablePlace.Type.House:
-                return "House";
+                return "<b>House</b>: Rest your villager at the house to keep them from exhausting. <color=#55F>Debuf dice maluses</color>.";
             case ScriptablePlace.Type.MarketPlace:
-                return "Market Place";
+                return "<b>Market Place</b>";
             case ScriptablePlace.Type.WatchTower:
-                return "Watch Tower";
+                return "<b>Watch Tower</b>: Keep watch of incoming threats. Adds <color=#55F>+1 block point</color> at the end of turn. <i>(Block point are used to protect from villager's loss during the Morning events)</i>";
             default:
                 return "Do nothing";
         }

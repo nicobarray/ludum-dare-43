@@ -18,7 +18,7 @@ public class Tooltip : MonoBehaviour
 
     string GetTooltipText(ScriptablePlace place)
     {
-        return Place.PlaceToString(place.type) + " (" + place.diceCost + "dp)";
+        return Place.PlaceToString(place.type) + " (cost " + place.diceCost + "dp)";
     }
 
     void Update()

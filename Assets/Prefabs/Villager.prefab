@@ -240,6 +240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4993a4cafcb484925a21d6355ce30557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maleSprite: {fileID: 21300000, guid: 4c7018e15ef8540cdbf6d1b301c8afee, type: 3}
+  femaleSprite: {fileID: 21300000, guid: e0cdc27e7a8d34547a23e700a5dba9ed, type: 3}
   canAct: 1
   hpText: {fileID: 114627055799017806}
   hp: 2

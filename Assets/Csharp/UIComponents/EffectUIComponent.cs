@@ -14,11 +14,15 @@ public class EffectUIComponent : MonoBehaviour
     public Image icon;
     public TMPro.TextMeshProUGUI text;
 
-    private GameEffect effect;
+    private GameEffect.EffectType effectType;
+    private int effectValue;
+    private object effectTarget;
 
-    public void Reset(GameEffect effect)
+    public void Reset(GameEffect effect, object target = null)
     {
-        this.effect = effect;
+        this.effectType = effect.type;
+        this.effectValue = effect.value;
+        this.effectTarget = target;
 
         icon.sprite = IconSpriteFromType(effect.type);
         text.text = (effect.value > 0 ? "+" : "") + effect.value + " " + effect.type;
@@ -26,7 +30,7 @@ public class EffectUIComponent : MonoBehaviour
 
     public void ApplyEffect()
     {
-        Game.instance.ApplyEffect(effect);
+        Game.instance.ApplyEffect(effectType, effectValue, effectTarget);
     }
 
     Sprite IconSpriteFromType(GameEffect.EffectType type)
@@ -41,6 +45,8 @@ public class EffectUIComponent : MonoBehaviour
                 return villagerIcon;
             case GameEffect.EffectType.Dice:
                 return diceIcon;
+            case GameEffect.EffectType.Stone:
+                return stoneIcon;
             default:
                 return woodIcon;
         }

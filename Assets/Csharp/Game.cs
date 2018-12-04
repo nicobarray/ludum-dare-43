@@ -53,6 +53,8 @@ public class Game : MonoBehaviour
     GameEvent[] currentSelection = new GameEvent[2];
     List<GameEvent> repeatableEvents = new List<GameEvent>();
 
+    List<ScriptableEventPair> eventPairSequence = new List<ScriptableEventPair>();
+
     public void CollectResourceFrom(Place p)
     {
         ApplyEffect(p.scriptable.effect);
@@ -75,7 +77,9 @@ public class Game : MonoBehaviour
         {
             gameCanvas.PopFloatingText(gameCanvas.timers.turnText.transform, -1);
         }
+
         gameCanvas.timers.turnText.text = (TURNS_BEFORE_WINTER - gameTurn) + " B.W.";
+
 
         gameCanvas.ChangeStep(-125);
         gameCanvas.throwDices.gameObject.SetActive(false);
@@ -91,7 +95,7 @@ public class Game : MonoBehaviour
         dicePoint = 0;
 
         gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
-        gameCanvas.resourceTexts.dice.text = dicesCount.ToString();
+        gameCanvas.resourceTexts.dice.text = "0";
         gameCanvas.resourceTexts.food.text = meals.ToString();
         gameCanvas.resourceTexts.wood.text = wood.ToString();
         gameCanvas.resourceTexts.stone.text = stone.ToString();
@@ -103,7 +107,17 @@ public class Game : MonoBehaviour
             NextStep();
         }
 
-        ScriptableEventPair options = eventPairs[UnityEngine.Random.Range(0, eventPairs.Length)];
+        if (eventPairSequence.Count == 0)
+        {
+            eventPairSequence.AddRange(eventPairs);
+            for (int i = 0; i < 5; i++)
+            {
+                eventPairSequence.Sort(new Comparison<ScriptableEventPair>((a, b) => UnityEngine.Random.Range(-1, 1)));
+            }
+        }
+
+        ScriptableEventPair options = eventPairSequence[0];
+        eventPairSequence.RemoveAt(0);
 
         currentSelection[0] = options.option1;
         gameCanvas.eventOption1Image.sprite = currentSelection[0].image;
@@ -114,6 +128,19 @@ public class Game : MonoBehaviour
         gameCanvas.eventOption2Text.text = currentSelection[1].GetText();
 
         gameCanvas.eventFrame.SetActive(true);
+
+        // Apply repeatable effects.
+        for (int i = repeatableEvents.Count - 1; i >= 0; i--)
+        {
+            GameEvent ev = repeatableEvents[i];
+
+            Game.instance.gameCanvas.effectLog.AddEvent(ev);
+
+            if (ev.turns <= 0)
+            {
+                repeatableEvents.RemoveAt(i);
+            }
+        }
     }
 
     void DicesStep()
@@ -169,36 +196,26 @@ public class Game : MonoBehaviour
 
     void EndStep()
     {
-        gameCanvas.ChangeStep(115);
-        gameCanvas.nextStep.gameObject.SetActive(false);
-        villagers.villagers.ForEach(vil =>
-        {
-            vil.canAct = false;
-        });
-
-        // Apply repeatable effects.
-        for (int i = repeatableEvents.Count - 1; i >= 0; i--)
-        {
-            GameEvent ev = repeatableEvents[i];
-
-            ApplyEvent(ev);
-
-            if (ev.turns <= 0)
-            {
-                repeatableEvents.RemoveAt(i);
-            }
-        }
-
         dice3DBox.Reset();
         dice3DBox.gameObject.SetActive(false);
 
-        // places.CollectWork();
-        villagers.Eat();
-        gameCanvas.effectLog.ApplyEffects(() => StartCoroutine(WaitX(1, NextStep)));
+        gameCanvas.ChangeStep(115);
+        gameCanvas.nextStep.gameObject.SetActive(false);
+
+        villagers.Reset();
+        places.Reset();
+
+        StartCoroutine(Utils.Chain(new List<IEnumerator>() {
+            gameCanvas.effectLog.ApplyEffectsAsync(),
+            villagers.EatAsync(),
+            WaitX(1.5f, NextStep)
+        }));
+
     }
 
     void CheckForVictoryOrDefeat()
     {
+        Debug.Log("villagers.villagers.Count: " + villagers.villagers.Count);
         if (villagers.villagers.Count > 0)
         {
             SceneManager.LoadScene("victory");
@@ -256,13 +273,13 @@ public class Game : MonoBehaviour
 
     void PickEffect(int which)
     {
-        Debug.Log("Apply effect !");
         GameEvent ev = currentSelection[which];
 
         if (ev.turns > 1)
         {
             // The event applies at the end of the turn.
             repeatableEvents.Add(ev);
+            gameCanvas.effectLog.AddEvent(ev);
         }
         else
         {
@@ -282,7 +299,12 @@ public class Game : MonoBehaviour
         CheckForDefeat();
     }
 
-    public void ApplyEffect(GameEffect eff)
+    public void ApplyEffect(GameEffect effect, object target = null)
+    {
+        ApplyEffect(effect.type, effect.value, target);
+    }
+
+    public void ApplyEffect(GameEffect.EffectType effectType, int effectValue, object target = null)
     {
         Action<int> updateDices = (value) =>
         {
@@ -291,9 +313,6 @@ public class Game : MonoBehaviour
             {
                 dicesCount = 0;
             }
-
-            gameCanvas.resourceTexts.dice.text = dicesCount.ToString();
-            gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, value);
         };
 
         Action<int> updateBlock = (value) =>
@@ -308,47 +327,53 @@ public class Game : MonoBehaviour
             gameCanvas.PopFloatingText(gameCanvas.blockPointText.transform, value);
         };
 
-        switch (eff.type)
+        switch (effectType)
         {
             case GameEffect.EffectType.Wood:
-                wood += eff.value;
+                wood += effectValue;
                 if (wood < 0)
                 {
                     wood = 0;
                 }
                 gameCanvas.resourceTexts.wood.text = wood.ToString();
-                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.wood.transform, eff.value);
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.wood.transform, effectValue);
                 break;
             case GameEffect.EffectType.Stone:
-                stone += eff.value;
+                stone += effectValue;
                 if (stone < 0)
                 {
                     stone = 0;
                 }
                 gameCanvas.resourceTexts.stone.text = stone.ToString();
-                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.stone.transform, eff.value);
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.stone.transform, effectValue);
                 break;
             case GameEffect.EffectType.Food:
-                meals += eff.value;
+                meals += effectValue;
                 if (meals < 0)
                 {
                     meals = 0;
                 }
                 gameCanvas.resourceTexts.food.text = meals.ToString();
-                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.food.transform, eff.value);
+                gameCanvas.PopFloatingText(gameCanvas.resourceTexts.food.transform, effectValue);
                 break;
             case GameEffect.EffectType.Dice:
-                updateDices(eff.value);
+                updateDices(effectValue);
 
                 break;
             case GameEffect.EffectType.Villager:
-                int value = eff.value;
+                int value = effectValue;
 
                 // Block points take for the villager.
                 if (blockPoint > 0 && value < 0)
                 {
-                    value = eff.value - blockPoint;
-                    updateBlock(eff.value);
+                    value = effectValue + blockPoint;
+
+                    if (value > 0)
+                    {
+                        value = 0;
+                    }
+
+                    updateBlock(effectValue);
                 }
 
                 villagersCount += value;
@@ -363,7 +388,8 @@ public class Game : MonoBehaviour
 
                 while (villagers.villagers.Count > villagersCount)
                 {
-                    villagers.RemoveVillager(villagers.villagers[0]);
+                    Villager targetVillager = (Villager)target;
+                    villagers.RemoveVillager(targetVillager != null ? targetVillager : villagers.villagers[0]);
                 }
 
                 while (villagers.villagers.Count < villagersCount)
@@ -371,10 +397,12 @@ public class Game : MonoBehaviour
                     villagers.AddVillager();
                 }
 
-                updateDices(eff.value);
+                CheckForDefeat();
+
+                updateDices(effectValue);
                 break;
             case GameEffect.EffectType.Block:
-                updateBlock(eff.value);
+                updateBlock(effectValue);
                 break;
         }
     }
@@ -414,9 +442,14 @@ public class Game : MonoBehaviour
             villagers.AddVillager();
         }
 
-        for (int i = 0; i < placesCount; i++)
+        for (int i = 0; i < placesCount / 2; i++)
         {
             places.AddPlace(places.scriptables[i]);
+        }
+
+        for (int i = placesCount / 2; i < placesCount; i++)
+        {
+            places.AddRandomPlace();
         }
 
         UpkeepStep();

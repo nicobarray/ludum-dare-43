@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4444971041446784}
   - component: {fileID: 212986305023597104}
+  - component: {fileID: 65544744987081524}
   m_Layer: 0
   m_Name: PlayerSlot
   m_TagString: Untagged
@@ -65,13 +66,25 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1298066545335462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.79, y: 0.22, z: 0}
+  m_LocalPosition: {x: -2.3069007, y: -5.8977647, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4444971041446784}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &65544744987081524
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1212819578684526}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.75, y: 1.5, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65558812958519462
 BoxCollider:
   m_ObjectHideFlags: 1

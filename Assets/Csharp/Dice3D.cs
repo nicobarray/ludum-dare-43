@@ -69,7 +69,7 @@ public class Dice3D : MonoBehaviour
 
                         if (distance > 0.05f)
                         {
-                            Game.instance.gameCanvas.PopFloatingText(transform.position, "Misthrown");
+                            Game.instance.gameCanvas.PopFloatingText(transform.position, "Misthrown", TextKind.Neutral);
                             rethrow = true;
                             break;
                         }

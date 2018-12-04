@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class Villager : MonoBehaviour
 {
+    private static Villager dragged = null;
+
+    public Sprite maleSprite;
+    public Sprite femaleSprite;
+
     public bool canAct = true;
     public TMPro.TextMeshPro hpText;
 
-    bool drag = false;
     Vector3 positionBeforeDrag;
     Vector3 initialPosition;
 
@@ -33,16 +37,9 @@ public class Villager : MonoBehaviour
         hpText.color = Color.green;
     }
 
-    void Raycast(Action<RaycastHit[]> onRaycast)
+    void Start()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit[] hits = Physics.RaycastAll(ray);
-
-        if (hits.Length > 0)
-        {
-            onRaycast(hits);
-        }
+        GetComponent<SpriteRenderer>().sprite = UnityEngine.Random.value > 0.5f ? femaleSprite : maleSprite;
     }
 
     // Update is called once per frame
@@ -58,7 +55,7 @@ public class Villager : MonoBehaviour
             return;
         }
 
-        if (drag)
+        if (dragged == this)
         {
             if (Input.GetMouseButton(0))
             {
@@ -66,9 +63,9 @@ public class Villager : MonoBehaviour
             }
             else
             {
-                drag = false;
+                dragged = null;
 
-                Raycast((hits) =>
+                Utils.Raycast((hits) =>
                 {
                     Place p = null;
                     foreach (var item in hits)
@@ -79,34 +76,38 @@ public class Villager : MonoBehaviour
                             p = place;
                             break;
                         }
+
+                        if (item.transform.name == "PlayerSlot")
+                        {
+                            p = item.transform.GetComponentInParent<Place>();
+                        }
                     }
 
                     if (p == null || p.worker != null)
                     {
                         transform.position = positionBeforeDrag;
+                        return;
                     }
-                    else
+
+                    int points = p.scriptable.diceCost;
+                    if (Game.instance.dicePoint < points)
                     {
-                        int points = p.scriptable.diceCost;
-                        if (Game.instance.dicePoint >= points)
-                        {
-                            Game.instance.RemoveDicePoints(points);
-                            Game.instance.gameCanvas.effectLog.AddEffect(p.scriptable.effect);
-                            canAct = false;
-                            p.worker = this;
-                            transform.position = p.transform.GetChild(0).position;
-                        }
-                        else
-                        {
-                            transform.position = positionBeforeDrag;
-                        }
+                        transform.position = positionBeforeDrag;
+                        return;
+
                     }
+
+                    Game.instance.RemoveDicePoints(points);
+                    Game.instance.gameCanvas.effectLog.AddEffect(p.scriptable.effect);
+                    canAct = false;
+                    p.worker = this;
+                    transform.position = p.transform.GetChild(0).position;
                 });
             }
         }
-        else
+        else if (dragged == null)
         {
-            Raycast((hits) =>
+            Utils.Raycast((hits) =>
             {
                 foreach (var item in hits)
                 {
@@ -115,7 +116,7 @@ public class Villager : MonoBehaviour
                     {
                         if (Input.GetMouseButton(0))
                         {
-                            drag = true;
+                            Villager.dragged = this;
                             positionBeforeDrag = transform.position;
                         }
                     }

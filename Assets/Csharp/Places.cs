@@ -48,15 +48,11 @@ public class Places : MonoBehaviour
         ReorderPlaces();
     }
 
-    public void CollectWork()
+    public void Reset()
     {
         places.ForEach(p =>
         {
-            if (p.worker != null)
-            {
-                Game.instance.CollectResourceFrom(p);
-                p.worker = null;
-            }
+            p.worker = null;
         });
     }
 }

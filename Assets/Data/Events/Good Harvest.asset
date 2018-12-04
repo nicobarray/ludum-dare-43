@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa461274e9e4a4f23bcd6a5a950b2009, type: 3}
+  m_Name: Good Harvest
+  m_EditorClassIdentifier: 
+  eventDescription: The gods are pleased. This year harvest is excellent !
+  image: {fileID: 0}
+  turns: 1
+  effects:
+  - {fileID: 11400000, guid: dda058a0011be4d92950e7654d854dfa, type: 2}
