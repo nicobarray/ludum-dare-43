@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Place : MonoBehaviour
+public class Place : MonoBehaviour, Tooltipable
 {
     public static string PlaceToString(ScriptablePlace.Type placeType)
     {
@@ -20,7 +20,7 @@ public class Place : MonoBehaviour
             case ScriptablePlace.Type.MarketPlace:
                 return "<b>Market Place</b>";
             case ScriptablePlace.Type.WatchTower:
-                return "<b>Watch Tower</b>: Keep watch of incoming threats. Adds <color=#55F>+1 block point</color> at the end of turn. <i>(Block point are used to protect from villager's loss during the Morning events)</i>";
+                return "<b>Watch Tower</b>: Keep watch of incoming threats. Adds <color=#55F>+1 shield point</color> at the end of turn. <i>(Shield point are used to protect from villager's loss during the Morning events)</i>";
             default:
                 return "Do nothing";
         }
@@ -41,5 +41,10 @@ public class Place : MonoBehaviour
             GameObject newVisualObject = Instantiate(scriptable.visualPrefab, Vector3.zero, Quaternion.identity);
             newVisualObject.transform.SetParent(transform);
         }
+    }
+
+    public string GetText()
+    {
+        return PlaceToString(scriptable.type) + " (cost " + scriptable.diceCost + "action points)";
     }
 }

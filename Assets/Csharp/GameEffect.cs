@@ -10,7 +10,7 @@ public class GameEffect : ScriptableObject
         Wood,
         Food,
         Stone,
-        Block
+        Shield
     }
 
     public int value;

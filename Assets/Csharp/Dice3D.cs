@@ -33,7 +33,6 @@ public class Dice3D : MonoBehaviour
     {
         value = -1;
         float force = 250;
-        float angle = UnityEngine.Random.Range(0, 360);
 
         float xForce = 250 + UnityEngine.Random.Range(-force, force) / 2;
         float yForce = 250 + UnityEngine.Random.Range(-force, force) / 2.5f;
@@ -42,6 +41,8 @@ public class Dice3D : MonoBehaviour
 
         _rigidbody.AddForce(lastForces, ForceMode.Force);
         _rigidbody.AddTorque(180 + UnityEngine.Random.value * 180, 180 + UnityEngine.Random.value * 180, 180 + UnityEngine.Random.value * 180);
+
+        Game.instance.sfxManager.PlayRandom(Game.instance.sfxManager.throwDices);
     }
 
     void Update()

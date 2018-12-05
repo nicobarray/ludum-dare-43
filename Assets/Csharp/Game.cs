@@ -26,6 +26,7 @@ public class Game : MonoBehaviour
 
     [Header("Scene References")]
     public GameCanvas gameCanvas;
+    public SFXManager sfxManager;
     public Dice3DBox dice3DBox;
     public Transform placesOrigin;
     public Transform villagersOrigin;
@@ -34,8 +35,7 @@ public class Game : MonoBehaviour
     public TurnSteps currentStep = TurnSteps.Upkeep;
     public int gameTurn = 0;
     public bool nextStep = false;
-    public int dicePoint = 0;
-    public int blockPoint = 0;
+    public int actionPoint = 0;
 
     public int dicesCount = 2;
     public int villagersCount = 1;
@@ -43,6 +43,7 @@ public class Game : MonoBehaviour
     public int wood = 0;
     public int meals = 0;
     public int stone = 0;
+    public int shield = 0;
 
     public int TURNS_BEFORE_WINTER = 15;
 
@@ -62,13 +63,13 @@ public class Game : MonoBehaviour
 
     public void RemoveDicePoints(int points)
     {
-        dicePoint -= points;
-        if (dicePoint < 0)
+        actionPoint -= points;
+        if (actionPoint < 0)
         {
-            dicePoint = 0;
+            actionPoint = 0;
         }
 
-        gameCanvas.resourceTexts.dice.text = dicePoint.ToString();
+        gameCanvas.resourceTexts.dice.text = actionPoint.ToString();
     }
 
     void UpkeepStep()
@@ -92,15 +93,14 @@ public class Game : MonoBehaviour
 
         villagers.ReorderVillagers();
 
-        dicePoint = 0;
+        actionPoint = 0;
 
         gameCanvas.resourceTexts.villager.text = villagersCount.ToString();
         gameCanvas.resourceTexts.dice.text = "0";
         gameCanvas.resourceTexts.food.text = meals.ToString();
         gameCanvas.resourceTexts.wood.text = wood.ToString();
         gameCanvas.resourceTexts.stone.text = stone.ToString();
-
-        gameCanvas.blockPointText.text = "BP: " + blockPoint.ToString();
+        gameCanvas.resourceTexts.shield.text = shield.ToString();
 
         if (eventPairs.Length == 0)
         {
@@ -162,9 +162,9 @@ public class Game : MonoBehaviour
 
         dice3DBox.Throw(dicesCount, (diceValue) => { Debug.Log("Got " + diceValue + " !"); }, (total) =>
         {
-            dicePoint = total;
-            gameCanvas.resourceTexts.dice.text = dicePoint.ToString();
-            gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, dicePoint);
+            actionPoint = total;
+            gameCanvas.resourceTexts.dice.text = actionPoint.ToString();
+            gameCanvas.PopFloatingText(gameCanvas.resourceTexts.dice.transform, actionPoint);
 
             NextStep();
 
@@ -315,16 +315,16 @@ public class Game : MonoBehaviour
             }
         };
 
-        Action<int> updateBlock = (value) =>
+        Action<int> updateShield = (value) =>
         {
-            blockPoint += value;
-            if (blockPoint < 0)
+            shield += value;
+            if (shield < 0)
             {
-                blockPoint = 0;
+                shield = 0;
             }
 
-            gameCanvas.blockPointText.text = blockPoint.ToString();
-            gameCanvas.PopFloatingText(gameCanvas.blockPointText.transform, value);
+            gameCanvas.resourceTexts.shield.text = shield.ToString();
+            gameCanvas.PopFloatingText(gameCanvas.resourceTexts.shield.transform, value);
         };
 
         switch (effectType)
@@ -363,17 +363,17 @@ public class Game : MonoBehaviour
             case GameEffect.EffectType.Villager:
                 int value = effectValue;
 
-                // Block points take for the villager.
-                if (blockPoint > 0 && value < 0)
+                // Shield points take for the villager.
+                if (shield > 0 && value < 0)
                 {
-                    value = effectValue + blockPoint;
+                    value = effectValue + shield;
 
                     if (value > 0)
                     {
                         value = 0;
                     }
 
-                    updateBlock(effectValue);
+                    updateShield(effectValue);
                 }
 
                 villagersCount += value;
@@ -401,8 +401,8 @@ public class Game : MonoBehaviour
 
                 updateDices(effectValue);
                 break;
-            case GameEffect.EffectType.Block:
-                updateBlock(effectValue);
+            case GameEffect.EffectType.Shield:
+                updateShield(effectValue);
                 break;
         }
     }

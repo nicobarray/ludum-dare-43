@@ -37,6 +37,11 @@ public class Villager : MonoBehaviour
         hpText.color = Color.green;
     }
 
+    public bool IsMale()
+    {
+        return GetComponent<SpriteRenderer>().sprite == maleSprite;
+    }
+
     void Start()
     {
         GetComponent<SpriteRenderer>().sprite = UnityEngine.Random.value > 0.5f ? femaleSprite : maleSprite;
@@ -90,7 +95,7 @@ public class Villager : MonoBehaviour
                     }
 
                     int points = p.scriptable.diceCost;
-                    if (Game.instance.dicePoint < points)
+                    if (Game.instance.actionPoint < points)
                     {
                         transform.position = positionBeforeDrag;
                         return;
@@ -99,6 +104,7 @@ public class Villager : MonoBehaviour
 
                     Game.instance.RemoveDicePoints(points);
                     Game.instance.gameCanvas.effectLog.AddEffect(p.scriptable.effect);
+                    Game.instance.sfxManager.Play(p.scriptable.effect.type);
                     canAct = false;
                     p.worker = this;
                     transform.position = p.transform.GetChild(0).position;

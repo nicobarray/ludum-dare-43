@@ -84,11 +84,13 @@ public class Villagers : MonoBehaviour
 
                 vil.Heal();
                 Game.instance.gameCanvas.PopFloatingText(vil.transform.position, "Tasty", TextKind.Neutral);
+                Game.instance.sfxManager.PlayRandom(Game.instance.sfxManager.villagerTasty_Male);
             }
             else
             {
                 vil.Hunger();
                 Game.instance.gameCanvas.PopFloatingText(vil.transform.position, "Hungry", TextKind.Negative);
+                Game.instance.sfxManager.PlayRandom(Game.instance.sfxManager.villagerHungry_Male);
 
                 if (vil.IsDead())
                 {

@@ -9,6 +9,7 @@ public class EffectUIComponent : MonoBehaviour
     public Sprite foodIcon;
     public Sprite villagerIcon;
     public Sprite diceIcon;
+    public Sprite shieldIcon;
 
     [Header("References")]
     public Image icon;
@@ -47,6 +48,8 @@ public class EffectUIComponent : MonoBehaviour
                 return diceIcon;
             case GameEffect.EffectType.Stone:
                 return stoneIcon;
+            case GameEffect.EffectType.Shield:
+                return shieldIcon;
             default:
                 return woodIcon;
         }

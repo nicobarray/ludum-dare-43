@@ -17,7 +17,7 @@ public class GameCanvas : MonoBehaviour
     public Button throwDices;
     public Button nextStep;
 
-    public TMPro.TextMeshProUGUI blockPointText;
+    public TMPro.TextMeshProUGUI shieldPointText;
 
     public GameObject eventFrame;
     public Button eventOption1;
@@ -49,6 +49,7 @@ public class GameCanvas : MonoBehaviour
         public TMPro.TextMeshProUGUI food;
         public TMPro.TextMeshProUGUI wood;
         public TMPro.TextMeshProUGUI stone;
+        public TMPro.TextMeshProUGUI shield;
     }
 
     public Resources resourceTexts;
